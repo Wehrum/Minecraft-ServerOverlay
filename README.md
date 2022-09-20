@@ -1,1 +1,1 @@
-# VanilliaCommandsExtended
+# VanillaCommandsExtended
