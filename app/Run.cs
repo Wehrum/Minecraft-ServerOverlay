@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using static Helper;
 
 public class Run
 {
@@ -7,15 +8,15 @@ public class Run
         Console.WriteLine("Running app");
         bool restart = false;
 
-        var process = new Process();
-        process.StartInfo = new ProcessStartInfo("/home/wehrum/madpack/TheMadPack/LaunchServer.sh")
+        var console = new Process();
+        console.StartInfo = new ProcessStartInfo("/home/wehrum/madpack/TheMadPack/LaunchServer.sh")
         {
             RedirectStandardOutput = true,
             RedirectStandardInput = true,
             UseShellExecute = false,
         };
 
-        process.OutputDataReceived += new DataReceivedEventHandler(async (sender, e) =>
+        console.OutputDataReceived += new DataReceivedEventHandler(async (sender, e) =>
         {
             if (e.Data != null)
             {
@@ -35,12 +36,12 @@ public class Run
                                 {
                                     string firstPlayer = result[3].Replace(">", "").Replace("<", "");
                                     string secondPlayer = result[5];
-                                    process.StandardInput.WriteLine($"tp {firstPlayer} {secondPlayer}");
-                                    process.StandardInput.WriteLine($"say Telporting {firstPlayer} to {secondPlayer} if it's not working check spelling");
+                                    Command($"tp {firstPlayer} {secondPlayer}", console);
+                                    Say($"Telporting {firstPlayer} to {secondPlayer}", console);
                                 }
                                 else
                                 {
-                                    process.StandardInput.WriteLine($"say To use: !tp (player) ex: !tp AConnor");
+                                    
                                 }
 
                                 break;
@@ -51,56 +52,56 @@ public class Run
                                     {
                                         if (Constants.Gamemodes[i] == result[5])
                                         {
-                                            process.StandardInput.WriteLine($"difficulty {result[5]}");
-                                            process.StandardInput.WriteLine($"say Switching difficulty to {result[5]}");
+                                            Command($"difficulty {result[5]}", console);
+                                            Say($"Switching difficulty to {result[5]}", console);
                                             break;
                                         }
                                         else if (i == Constants.Gamemodes.Length - 1)
                                         {
-                                            process.StandardInput.WriteLine($"say Switching difficulty to {result[5]}");
+                                            Say($"Switching difficulty to {result[5]}", console);
                                         }
                                     }
                                 }
                                 else
                                 {
-                                    process.StandardInput.WriteLine($"say To use: !difficulty (difficulty) ex: !difficulty hard");
+                                    Say($"To use: !difficulty (difficulty) ex: !difficulty hard", console);
                                 }
                                 break;
                             case "!restart":
                                 restart = true;
-                                process.StandardInput.WriteLine($"say This will RESTART the server, if you're sure type !confirm");
+                                Say($"This will RESTART the server, if you're sure type !confirm", console);
                                 break;
                             case "!confirm":
                                 if (restart)
                                 {
                                     for (int i = 10; i > 0; i--)
                                     {
-                                        process.StandardInput.WriteLine($"say Restarting the server in {i}!");
+                                        Say($"Restarting the server in {i}!", console);
                                         Thread.Sleep(1000);
                                     }
-                                    process.StandardInput.WriteLine($"stop");
+                                    console.StandardInput.WriteLine($"stop");
                                 }
                                 else
                                 {
-                                    process.StandardInput.WriteLine($"say Please type !restart first to avoid accidental restarts");
+                                    Say("Please type !restart first to avoid accidental restarts", console);
                                 }
                                 break;
                             case "!":
                             case "!?":
                             case "!help":
-                                process.StandardInput.WriteLine($"say Available commands:");
+                                Say($"Available commands:");
                                 Thread.Sleep(1000);
-                                process.StandardInput.WriteLine($"say - !difficulty");
+                                Say($"- !difficulty");
                                 Thread.Sleep(1000);
-                                process.StandardInput.WriteLine($"say - !restart");
+                                Say($"- !restart");
                                 Thread.Sleep(1000);
-                                process.StandardInput.WriteLine($"say - !tp");
+                                Say($"- !tp");
                                 break;
                         }
                     }
                     catch (Exception err)
                     {
-                        process.StandardInput.WriteLine($"say Serious error occured, let Connor know || Stack: {err.Message}");
+                        Say($"Serious error occured, let Connor know || Stack: {err.Message}", console);
                     }
 
                 }
@@ -109,8 +110,8 @@ public class Run
 
             Console.WriteLine(e.Data);
         });
-        process.Start();
-        process.BeginOutputReadLine();
+        console.Start();
+        console.BeginOutputReadLine();
 
 
         //Prevent closing
