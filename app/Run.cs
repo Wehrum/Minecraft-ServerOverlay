@@ -14,7 +14,7 @@ public class Run
             RedirectStandardInput = true,
             UseShellExecute = false,
         };
-        
+
         process.OutputDataReceived += new DataReceivedEventHandler(async (sender, e) =>
         {
             if (e.Data != null)
@@ -31,32 +31,35 @@ public class Run
                         switch (result[4])
                         {
                             case "!tp":
-                            if (result.Length == 6)
-                            { 
-                                string firstPlayer = result[3].Replace(">", "").Replace("<", "");
-                                string secondPlayer = result[5];
-                                process.StandardInput.WriteLine($"tp {firstPlayer} {secondPlayer}");
-                                process.StandardInput.WriteLine($"say Telporting {firstPlayer} to {secondPlayer} if it's not working check spelling");
-                            }
-                            else 
-                            {
-                                process.StandardInput.WriteLine($"say To use: !tp (player) ex: !tp AConnor");
-                            }
+                                if (result.Length == 6)
+                                {
+                                    string firstPlayer = result[3].Replace(">", "").Replace("<", "");
+                                    string secondPlayer = result[5];
+                                    process.StandardInput.WriteLine($"tp {firstPlayer} {secondPlayer}");
+                                    process.StandardInput.WriteLine($"say Telporting {firstPlayer} to {secondPlayer} if it's not working check spelling");
+                                }
+                                else
+                                {
+                                    process.StandardInput.WriteLine($"say To use: !tp (player) ex: !tp AConnor");
+                                }
 
                                 break;
                             case "!difficulty":
                                 if (result.Length == 6)
                                 {
-                                    if (result[5] == "easy" || result[5] == "normal" || result[5] == "hard" || result[5] == "peaceful")
+                                    for (int i = 0; i < Constants.Gamemodes.Length; i++)
                                     {
-                                        process.StandardInput.WriteLine($"difficulty {result[5]}");
-                                        process.StandardInput.WriteLine($"say Switching difficulty to {result[5]}");
+                                        if (Constants.Gamemodes[i] == result[5])
+                                        {
+                                            process.StandardInput.WriteLine($"difficulty {result[5]}");
+                                            process.StandardInput.WriteLine($"say Switching difficulty to {result[5]}");
+                                            break;
+                                        }
+                                        else if (i == Constants.Gamemodes.Length - 1)
+                                        {
+                                            process.StandardInput.WriteLine($"say Switching difficulty to {result[5]}");
+                                        }
                                     }
-                                    else
-                                    {
-                                        process.StandardInput.WriteLine("say Unknown difficulty, check your spelling");
-                                    }
-
                                 }
                                 else
                                 {
@@ -108,8 +111,6 @@ public class Run
         });
         process.Start();
         process.BeginOutputReadLine();
-
-        //process.StandardInput.WriteLine("exit");
 
 
         //Prevent closing
