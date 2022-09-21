@@ -5,15 +5,17 @@ public class Run
 {
     public Process console;
     
-    //Thread tid2 = new Thread(new ThreadStart(startApp));
-    public void startApp()
+    //Thread tid2 = new Thread(new ThreadStart(ServerOverlay));
+    public void ServerOverlay()
     {
         Console.WriteLine("Running app");
         bool restart = false;
 
         console = new Process();
-        console.StartInfo = new ProcessStartInfo("/home/connorwehrum/project/testserver/LaunchServer.sh")
+        console.StartInfo = new ProcessStartInfo()
         {
+            FileName = "bash",
+            Arguments = "/home/connorwehrum/project/testserver/LaunchServer.sh",
             RedirectStandardOutput = true,
             RedirectStandardInput = true,
             UseShellExecute = false,
@@ -30,7 +32,7 @@ public class Run
                     {
                         if (result[3] == "completed" && result[4] == "server-stop")
                         {
-                            startApp();
+                            ServerOverlay();
                         }
                         switch (result[4])
                         {
@@ -77,13 +79,10 @@ public class Run
         Console.Read();
     }
 
-    public void Test()
+    public void ConsoleReader()
     {
-        Thread.Sleep(10000);
-        while (true)
-        {
-            Command(console, Console.ReadLine() ?? string.Empty);
-        }
+        var result = Console.ReadLine() ?? string.Empty;
+        Command(console, result);
+        ConsoleReader();
     }
-
 }
