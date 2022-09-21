@@ -1,3 +1,6 @@
 ﻿var myapp = new Run();
 myapp.startApp();
-//Task task2 = Task.Factory.StartNew(() => doStuff("Task2"));
+Thread Th1 = new Thread(new ThreadStart(myapp.startApp));
+Thread Th2 = new Thread(new ThreadStart(myapp.Test));
+Th1.Start();
+Th2.Start();

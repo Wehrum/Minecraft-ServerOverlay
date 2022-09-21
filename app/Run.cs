@@ -3,14 +3,15 @@ using static Helper;
 
 public class Run
 {
-    //Thread tid1 = new Thread(new ThreadStart(startApp));
+    public Process console;
+    
     //Thread tid2 = new Thread(new ThreadStart(startApp));
     public void startApp()
     {
         Console.WriteLine("Running app");
         bool restart = false;
 
-        var console = new Process();
+        console = new Process();
         console.StartInfo = new ProcessStartInfo("/home/connorwehrum/project/testserver/LaunchServer.sh")
         {
             RedirectStandardOutput = true,
@@ -65,16 +66,23 @@ public class Run
                     }
 
                 }
-
             }
             Console.WriteLine(e.Data);
+
         });
         console.Start();
         console.BeginOutputReadLine();
 
-
         //Prevent closing
         Console.Read();
+    }
+
+    public void Test()
+    {
+        for (int i = 0; i < 1000; i++)
+        {
+            Say(console, "yo");
+        }
     }
 
 }
