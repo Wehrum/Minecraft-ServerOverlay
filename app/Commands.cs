@@ -74,7 +74,7 @@ public class Commands
         }
     }
 
-    public static void SetHomeLogic (string[] coordinates, string userName, string homeName)
+    public static void SetHomeLogic (Process console, string[] coordinates, string userName, string homeName)
     {
         var jsonData = System.IO.File.ReadAllText($"{AppContext.BaseDirectory}/homeconfig.json");
         Data data = JsonSerializer.Deserialize<Data>(jsonData);
@@ -83,19 +83,31 @@ public class Commands
         {
             if (data.Players[i].Username == userName)
             {
-                data.Players[i].UserHomes.Add(
-                    new Home
+                 foreach (var item in data.Players[i].UserHomes)
+                {
+                    if (item.HomeName == homeName)
                     {
-                        HomeName = homeName,
-                        Coordinates = coordinates
+                        Command(console, $"tell {userName} Error: You already have a home set with that name. To list homes type !listhomes");
+                        break;
                     }
-                );
-                break;
+                    else 
+                    {
+                        data.Players[i].UserHomes.Add(
+                            new Home
+                            {
+                                HomeName = homeName,
+                                Coordinates = coordinates
+                            }
+                        );
+                        break;
+                    }
+                }
+                
             }
             else if (i == data.Players.Count - 1)
             {
-                var initalHome = new List<Home>();
-                initalHome.Add(new Home {
+                var initialHome = new List<Home>();
+                initialHome.Add(new Home {
                     HomeName = homeName,
                     Coordinates = coordinates
                 });
@@ -104,15 +116,15 @@ public class Commands
                     new Player
                     {
                         Username = userName,
-                        UserHomes = initalHome
+                        UserHomes = initialHome
                     }
                 );
-                
-                
-                    
-
                 break;
             }
+                double.TryParse(coordinates[0], out double x);
+                double.TryParse(coordinates[1], out double y);
+                double.TryParse(coordinates[2], out double z);
+                Command(console, $"tell {userName} successfully created home: '{homeName}' at X: {Math.Round(x)} Y: {Math.Round(y)} Z: {Math.Round(z)}");
         }
 
         File.WriteAllText($"{AppContext.BaseDirectory}homeconfig.json", JsonSerializer.Serialize(data, new JsonSerializerOptions {
@@ -123,5 +135,31 @@ public class Commands
     public static void Home(string[] result, Process console)
     {
 
+    }
+
+    public static void ListHomes(Process console, string[] result)
+    {
+        var jsonData = System.IO.File.ReadAllText($"{AppContext.BaseDirectory}/homeconfig.json");
+        Data data = JsonSerializer.Deserialize<Data>(jsonData);
+
+         string player = result[3].Replace(">", "").Replace("<", "");
+
+        for (int i = 0; i < data.Players.Count; i++)
+        {
+            if (data.Players[i].Username == player)
+            {
+                Command(console, $"tell {player} homes:");
+
+                foreach (var item in data.Players[i].UserHomes)
+                {
+                    Command(console, $"tell {player} {item.HomeName}");
+                }
+                break;
+            }
+            else if (i == data.Players.Count - 1)
+            {
+                Say(console, $"You don't have any homes, try making one with !sethome");
+            }
+        }
     }
 }

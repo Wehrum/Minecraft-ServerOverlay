@@ -52,6 +52,10 @@ public class Run
                                     homeName = result[5];
                                 }
                                 break;
+                                case "!listhome":
+                                case "!listhomes":
+                                Commands.ListHomes(console, result);
+                                break;
                             case "!":
                             case "!?":
                             case "!help":
@@ -73,7 +77,8 @@ public class Run
                             if (cords.Length == 3)
                             {
                                 string player = result[4];
-                                Commands.SetHomeLogic(cords, player, homeName);
+                                Commands.SetHomeLogic(console, cords, player, homeName);
+                                homeName = "";
                             }
                             break;
                         }
