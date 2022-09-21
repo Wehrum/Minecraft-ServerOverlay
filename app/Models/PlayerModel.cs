@@ -3,6 +3,6 @@ using System;
     {
         public string Username { get; set; }
 
-        public HomeModel[] UserHomes { get; set; }
+        public List<HomeModel> UserHomes { get; set; }
     }
 
