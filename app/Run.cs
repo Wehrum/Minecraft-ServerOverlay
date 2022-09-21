@@ -3,13 +3,15 @@ using static Helper;
 
 public class Run
 {
+    //Thread tid1 = new Thread(new ThreadStart(startApp));
+    //Thread tid2 = new Thread(new ThreadStart(startApp));
     public void startApp()
     {
         Console.WriteLine("Running app");
         bool restart = false;
 
         var console = new Process();
-        console.StartInfo = new ProcessStartInfo("/home/wehrum/madpack/TheMadPack/LaunchServer.sh")
+        console.StartInfo = new ProcessStartInfo("/home/connorwehrum/project/testserver/LaunchServer.sh")
         {
             RedirectStandardOutput = true,
             RedirectStandardInput = true,
@@ -65,7 +67,6 @@ public class Run
                 }
 
             }
-
             Console.WriteLine(e.Data);
         });
         console.Start();
@@ -73,8 +74,7 @@ public class Run
 
 
         //Prevent closing
-        string result = Console.ReadLine() ?? String.Empty;
-        Command(console, result);
-        console.BeginOutputReadLine();
+        Console.Read();
     }
+
 }
