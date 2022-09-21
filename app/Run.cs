@@ -47,7 +47,7 @@ public class Run
                                 Commands.Confirm(console, restart);
                                 break;
                                 case "!sethome":
-                                if(Commands.SetHome(console, result));
+                                if(Commands.SetHome(console, result))
                                 {
                                     homeName = result[5];
                                 }

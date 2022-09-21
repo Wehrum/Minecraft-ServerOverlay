@@ -90,28 +90,32 @@ public class Commands
                         Coordinates = coordinates
                     }
                 );
+                break;
             }
-            else 
+            else if (i == data.Players.Count - 1)
             {
+                var initalHome = new List<Home>();
+                initalHome.Add(new Home {
+                    HomeName = homeName,
+                    Coordinates = coordinates
+                });
+
                 data.Players.Add(
                     new Player
                     {
                         Username = userName,
-                        UserHomes = new List<Home>()
+                        UserHomes = initalHome
                     }
                 );
                 
-                data.Players[i].UserHomes.Add(
-                    new Home
-                    {
-                        HomeName = homeName,
-                        Coordinates = coordinates
-                    }
-                );
+                
+                    
+
+                break;
             }
         }
 
-        File.WriteAllText($"{AppContext.BaseDirectory}/homeconfig.json", JsonSerializer.Serialize(data, new JsonSerializerOptions {
+        File.WriteAllText($"{AppContext.BaseDirectory}homeconfig.json", JsonSerializer.Serialize(data, new JsonSerializerOptions {
              WriteIndented = true
          }));
     }

@@ -15,7 +15,7 @@ public static class Helper
 
     public static void FileChecker()
     {
-        if (!System.IO.File.Exists($"{AppContext.BaseDirectory}/homeconfig.json"))
+        if (!System.IO.File.Exists($"{AppContext.BaseDirectory}homeconfig.json"))
         {
             var obj = new Data
             {
@@ -33,7 +33,7 @@ public static class Helper
                 }
                 
             };
-            File.AppendAllText($"{AppContext.BaseDirectory}/homeconfig.json", JsonSerializer.Serialize(obj, new JsonSerializerOptions {
+            File.WriteAllText($"{AppContext.BaseDirectory}homeconfig.json", JsonSerializer.Serialize(obj, new JsonSerializerOptions {
              WriteIndented = true
          }));
         }
