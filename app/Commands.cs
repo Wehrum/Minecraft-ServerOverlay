@@ -23,12 +23,12 @@ public class Commands
                 if (Constants.Gamemodes[i] == result[5])
                 {
                     Command(console, $"difficulty {result[5]}");
-                    Say(console, "Switching difficulty to {result[5]}");
+                    Say(console, $"Switching difficulty to {result[5]}");
                     break;
                 }
                 else if (i == Constants.Gamemodes.Length - 1)
                 {
-                    Say(console, $"Switching difficulty to {result[5]}");
+                    Say(console, $"Error: Unknown difficulty");
                 }
             }
         }
@@ -38,10 +38,12 @@ public class Commands
         }
     }
 
-    public static void Confirm(bool restart, Process console)
+    public static bool Confirm(bool restart, Process console)
     {
+        bool resetCalled = false;
         if (restart)
         {
+            Console.WriteLine("Restarting the server, please wait.");
             for (int i = 10; i > 0; i--)
             {
                 Say(console, $"Restarting the server in {i}!");
@@ -49,12 +51,13 @@ public class Commands
             }
             console.StandardInput.WriteLine($"stop");
             Thread.Sleep(1000);
-            Run startServer = new Run();
-            startServer.ServerOverlay();
+            resetCalled = true;
+            return resetCalled;
         }
         else
         {
             Say(console, "Please type !restart first to avoid accidental restarts");
+            return resetCalled;
         }
     }
 }

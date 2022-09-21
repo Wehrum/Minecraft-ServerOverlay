@@ -43,7 +43,10 @@ public class Run
                                 Say(console, "This will RESTART the server, if you're sure type !confirm");
                                 break;
                             case "!confirm":
-                                Commands.Confirm(restart, console);
+                                if (Commands.Confirm(restart, console))
+                                {
+                                    ServerOverlay();
+                                }
                                 break;
                             case "!":
                             case "!?":
