@@ -38,7 +38,7 @@ public class Commands
         }
     }
 
-    public static void Confirm(bool restart, Process console)
+    public static void Confirm(Process console, bool restart)
     {
         if (restart)
         {
@@ -56,5 +56,23 @@ public class Commands
         {
             Say(console, "Please type !restart first to avoid accidental restarts");
         }
+    }
+
+    public static void SetHome(Process console, string[] result)
+    {
+        if (result.Length == 6)
+        {
+             string player = result[3].Replace(">", "").Replace("<", "");
+            Command(console, $"tp {player} ~ ~ ~");
+        }
+        else
+        {
+            Say(console, "To use: !sethome (home) ex: !sethome myplace");
+        }
+    }
+
+    public static void Home(string[] result, Process console)
+    {
+
     }
 }

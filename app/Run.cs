@@ -43,7 +43,10 @@ public class Run
                                 Say(console, "This will RESTART the server, if you're sure type !confirm");
                                 break;
                             case "!confirm":
-                                Commands.Confirm(restart, console);
+                                Commands.Confirm(console, restart);
+                                break;
+                                case "!sethome":
+                                Commands.SetHome(console, result);
                                 break;
                             case "!":
                             case "!?":
@@ -56,6 +59,16 @@ public class Run
                                 Thread.Sleep(1000);
                                 Say(console, "- !tp");
                                 break;
+                        }
+                        switch(result[3])
+                        {
+                            case "teleported":
+                            var cords = result[6].Split(",");
+                            foreach (var item in cords)
+                            {
+                                Console.WriteLine(item);
+                            }
+                            break;
                         }
                     }
                     catch (Exception err)
