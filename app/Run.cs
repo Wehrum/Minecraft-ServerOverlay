@@ -64,15 +64,16 @@ public class Run
                     catch (Exception err)
                     {
                         Say(console, $"Serious error occured, let Connor know || Stack: {err.Message}");
+                        Console.WriteLine(err);
                     }
 
                 }
             }
             Console.WriteLine(e.Data);
-
         });
         console.Start();
         console.BeginOutputReadLine();
+        
 
         //Prevent closing
         Console.Read();
@@ -80,10 +81,15 @@ public class Run
 
     public void ConsoleReader()
     {
-        try {
+        try 
+        {
             var result = Console.ReadLine() ?? string.Empty;
-        Command(console, result);
-        ConsoleReader();
+                if(console.HasExited)
+                {
+                    Console.WriteLine("Exiting program due to console exit.");
+                }
+            Command(console, result);
+            ConsoleReader();
         }
         catch (Exception e)
         {
