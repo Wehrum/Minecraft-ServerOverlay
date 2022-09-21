@@ -62,11 +62,13 @@ public class Run
                         }
                         switch(result[3])
                         {
+                            //TODO: Add check to make sure this is only activated 
+                            //when coming from overlay and not the console 
                             case "teleported":
                             var cords = result[6].Split(",");
-                            foreach (var item in cords)
+                            if (cords.Length == 3)
                             {
-                                Console.WriteLine(item);
+                                string player = result[4];
                             }
                             break;
                         }
