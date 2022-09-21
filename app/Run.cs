@@ -79,9 +79,10 @@ public class Run
 
     public void Test()
     {
-        for (int i = 0; i < 1000; i++)
+        Thread.Sleep(10000);
+        while (true)
         {
-            Say(console, "yo");
+            Command(console, Console.ReadLine() ?? string.Empty);
         }
     }
 
