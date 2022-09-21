@@ -48,6 +48,9 @@ public class Commands
                 Thread.Sleep(1000);
             }
             console.StandardInput.WriteLine($"stop");
+            Thread.Sleep(1000);
+            Run startServer = new Run();
+            startServer.ServerOverlay();
         }
         else
         {

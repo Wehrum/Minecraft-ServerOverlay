@@ -30,10 +30,6 @@ public class Run
                 {
                     try
                     {
-                        if (result[3] == "completed" && result[4] == "server-stop")
-                        {
-                            ServerOverlay();
-                        }
                         switch (result[4])
                         {
                             case "!tp":
@@ -81,8 +77,15 @@ public class Run
 
     public void ConsoleReader()
     {
-        var result = Console.ReadLine() ?? string.Empty;
+        try {
+            var result = Console.ReadLine() ?? string.Empty;
         Command(console, result);
         ConsoleReader();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        
     }
 }
