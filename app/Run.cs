@@ -1,21 +1,27 @@
 using System.Diagnostics;
+using static Helper;
 
 public class Run
 {
-    public void startApp()
+    public Process console;
+    
+    //Thread tid2 = new Thread(new ThreadStart(ServerOverlay));
+    public void ServerOverlay()
     {
         Console.WriteLine("Running app");
         bool restart = false;
 
-        var process = new Process();
-        process.StartInfo = new ProcessStartInfo("/home/wehrum/madpack/TheMadPack/LaunchServer.sh")
+        console = new Process();
+        console.StartInfo = new ProcessStartInfo()
         {
+            FileName = "bash",
+            Arguments = "/home/connorwehrum/project/testserver/LaunchServer.sh",
             RedirectStandardOutput = true,
             RedirectStandardInput = true,
             UseShellExecute = false,
         };
-        
-        process.OutputDataReceived += new DataReceivedEventHandler(async (sender, e) =>
+
+        console.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
         {
             if (e.Data != null)
             {
@@ -24,95 +30,62 @@ public class Run
                 {
                     try
                     {
-                        if (result[3] == "completed" && result[4] == "server-stop")
-                        {
-                            startApp();
-                        }
                         switch (result[4])
                         {
                             case "!tp":
-                            if (result.Length == 6)
-                            { 
-                                string firstPlayer = result[3].Replace(">", "").Replace("<", "");
-                                string secondPlayer = result[5];
-                                process.StandardInput.WriteLine($"tp {firstPlayer} {secondPlayer}");
-                                process.StandardInput.WriteLine($"say Telporting {firstPlayer} to {secondPlayer} if it's not working check spelling");
-                            }
-                            else 
-                            {
-                                process.StandardInput.WriteLine($"say To use: !tp (player) ex: !tp AConnor");
-                            }
-
+                                Commands.Teleport(console, result);
                                 break;
                             case "!difficulty":
-                                if (result.Length == 6)
-                                {
-                                    if (result[5] == "easy" || result[5] == "normal" || result[5] == "hard" || result[5] == "peaceful")
-                                    {
-                                        process.StandardInput.WriteLine($"difficulty {result[5]}");
-                                        process.StandardInput.WriteLine($"say Switching difficulty to {result[5]}");
-                                    }
-                                    else
-                                    {
-                                        process.StandardInput.WriteLine("say Unknown difficulty, check your spelling");
-                                    }
-
-                                }
-                                else
-                                {
-                                    process.StandardInput.WriteLine($"say To use: !difficulty (difficulty) ex: !difficulty hard");
-                                }
+                                Commands.Difficulty(console, result);
                                 break;
                             case "!restart":
                                 restart = true;
-                                process.StandardInput.WriteLine($"say This will RESTART the server, if you're sure type !confirm");
+                                Say(console, "This will RESTART the server, if you're sure type !confirm");
                                 break;
                             case "!confirm":
-                                if (restart)
-                                {
-                                    for (int i = 10; i > 0; i--)
-                                    {
-                                        process.StandardInput.WriteLine($"say Restarting the server in {i}!");
-                                        Thread.Sleep(1000);
-                                    }
-                                    process.StandardInput.WriteLine($"stop");
-                                }
-                                else
-                                {
-                                    process.StandardInput.WriteLine($"say Please type !restart first to avoid accidental restarts");
-                                }
+                                Commands.Confirm(restart, console);
                                 break;
                             case "!":
                             case "!?":
                             case "!help":
-                                process.StandardInput.WriteLine($"say Available commands:");
+                                Say(console, "Available commands:");
                                 Thread.Sleep(1000);
-                                process.StandardInput.WriteLine($"say - !difficulty");
+                                Say(console, "- !difficulty");
                                 Thread.Sleep(1000);
-                                process.StandardInput.WriteLine($"say - !restart");
+                                Say(console, "- !restart");
                                 Thread.Sleep(1000);
-                                process.StandardInput.WriteLine($"say - !tp");
+                                Say(console, "- !tp");
                                 break;
                         }
                     }
                     catch (Exception err)
                     {
-                        process.StandardInput.WriteLine($"say Serious error occured, let Connor know || Stack: {err.Message}");
+                        Say(console, $"Serious error occured, let Connor know || Stack: {err.Message}");
                     }
 
                 }
-
             }
-
             Console.WriteLine(e.Data);
+
         });
-        process.Start();
-        process.BeginOutputReadLine();
-
-        //process.StandardInput.WriteLine("exit");
-
+        console.Start();
+        console.BeginOutputReadLine();
 
         //Prevent closing
         Console.Read();
+    }
+
+    public void ConsoleReader()
+    {
+        try {
+            var result = Console.ReadLine() ?? string.Empty;
+        Command(console, result);
+        ConsoleReader();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        
     }
 }
