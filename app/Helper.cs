@@ -17,23 +17,25 @@ public static class Helper
     {
         if (!System.IO.File.Exists($"{AppContext.BaseDirectory}/homeconfig.json"))
         {
-            var obj = new DataModel
+            var obj = new Data
             {
-                Players = new List<PlayerModel>
+                Players = new List<Player>
                 {
-                    new PlayerModel
+                    new Player
                     {
-                        UserHomes = new List<HomeModel>
+                        UserHomes = new List<Home>
                         {
-                            new HomeModel{
-                                Cordinates = new string[] {""}
+                            new Home{
+                                Coordinates = new string[] {""}
                             }
                         }
                     }
                 }
                 
             };
-            File.AppendAllText($"{AppContext.BaseDirectory}/homeconfig.json", JsonSerializer.Serialize(obj));
+            File.AppendAllText($"{AppContext.BaseDirectory}/homeconfig.json", JsonSerializer.Serialize(obj, new JsonSerializerOptions {
+             WriteIndented = true
+         }));
         }
     }
 }

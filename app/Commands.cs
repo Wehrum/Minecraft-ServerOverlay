@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.Json;
 using static Helper;
 
 public class Commands
@@ -58,17 +59,61 @@ public class Commands
         }
     }
 
-    public static void SetHome(Process console, string[] result)
+    public static bool SetHome(Process console, string[] result)
     {
         if (result.Length == 6)
         {
-             string player = result[3].Replace(">", "").Replace("<", "");
+            string player = result[3].Replace(">", "").Replace("<", "");
             Command(console, $"tp {player} ~ ~ ~");
+            return true;
         }
         else
         {
             Say(console, "To use: !sethome (home) ex: !sethome myplace");
+            return false;
         }
+    }
+
+    public static void SetHomeLogic (string[] coordinates, string userName, string homeName)
+    {
+        var jsonData = System.IO.File.ReadAllText($"{AppContext.BaseDirectory}/homeconfig.json");
+        Data data = JsonSerializer.Deserialize<Data>(jsonData);
+
+        for (int i = 0; i < data.Players.Count; i++)
+        {
+            if (data.Players[i].Username == userName)
+            {
+                data.Players[i].UserHomes.Add(
+                    new Home
+                    {
+                        HomeName = homeName,
+                        Coordinates = coordinates
+                    }
+                );
+            }
+            else 
+            {
+                data.Players.Add(
+                    new Player
+                    {
+                        Username = userName,
+                        UserHomes = new List<Home>()
+                    }
+                );
+                
+                data.Players[i].UserHomes.Add(
+                    new Home
+                    {
+                        HomeName = homeName,
+                        Coordinates = coordinates
+                    }
+                );
+            }
+        }
+
+        File.WriteAllText($"{AppContext.BaseDirectory}/homeconfig.json", JsonSerializer.Serialize(data, new JsonSerializerOptions {
+             WriteIndented = true
+         }));
     }
 
     public static void Home(string[] result, Process console)

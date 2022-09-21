@@ -10,6 +10,7 @@ public class Run
     {
         Console.WriteLine("Running app");
         bool restart = false;
+        string homeName = "";
 
         console = new Process();
         console.StartInfo = new ProcessStartInfo()
@@ -46,7 +47,10 @@ public class Run
                                 Commands.Confirm(console, restart);
                                 break;
                                 case "!sethome":
-                                Commands.SetHome(console, result);
+                                if(Commands.SetHome(console, result));
+                                {
+                                    homeName = result[5];
+                                }
                                 break;
                             case "!":
                             case "!?":
@@ -64,11 +68,12 @@ public class Run
                         {
                             //TODO: Add check to make sure this is only activated 
                             //when coming from overlay and not the console 
-                            case "teleported":
+                            case "teleported": //When !sethome is called, console executed a teleport, check for this message to grab coords
                             var cords = result[6].Split(",");
                             if (cords.Length == 3)
                             {
                                 string player = result[4];
+                                Commands.SetHomeLogic(cords, player, homeName);
                             }
                             break;
                         }
