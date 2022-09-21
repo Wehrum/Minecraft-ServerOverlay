@@ -16,7 +16,7 @@ public class Run
             UseShellExecute = false,
         };
 
-        console.OutputDataReceived += new DataReceivedEventHandler(async (sender, e) =>
+        console.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
         {
             if (e.Data != null)
             {
@@ -32,76 +32,34 @@ public class Run
                         switch (result[4])
                         {
                             case "!tp":
-                                if (result.Length == 6)
-                                {
-                                    string firstPlayer = result[3].Replace(">", "").Replace("<", "");
-                                    string secondPlayer = result[5];
-                                    Command($"tp {firstPlayer} {secondPlayer}", console);
-                                    Say($"Telporting {firstPlayer} to {secondPlayer}", console);
-                                }
-                                else
-                                {
-                                    
-                                }
-
+                                Commands.Teleport(console, result);
                                 break;
                             case "!difficulty":
-                                if (result.Length == 6)
-                                {
-                                    for (int i = 0; i < Constants.Gamemodes.Length; i++)
-                                    {
-                                        if (Constants.Gamemodes[i] == result[5])
-                                        {
-                                            Command($"difficulty {result[5]}", console);
-                                            Say($"Switching difficulty to {result[5]}", console);
-                                            break;
-                                        }
-                                        else if (i == Constants.Gamemodes.Length - 1)
-                                        {
-                                            Say($"Switching difficulty to {result[5]}", console);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    Say($"To use: !difficulty (difficulty) ex: !difficulty hard", console);
-                                }
+                                Commands.Difficulty(console, result);
                                 break;
                             case "!restart":
                                 restart = true;
-                                Say($"This will RESTART the server, if you're sure type !confirm", console);
+                                Say(console, "This will RESTART the server, if you're sure type !confirm");
                                 break;
                             case "!confirm":
-                                if (restart)
-                                {
-                                    for (int i = 10; i > 0; i--)
-                                    {
-                                        Say($"Restarting the server in {i}!", console);
-                                        Thread.Sleep(1000);
-                                    }
-                                    console.StandardInput.WriteLine($"stop");
-                                }
-                                else
-                                {
-                                    Say("Please type !restart first to avoid accidental restarts", console);
-                                }
+                                Commands.Confirm(restart, console);
                                 break;
                             case "!":
                             case "!?":
                             case "!help":
-                                Say($"Available commands:");
+                                Say(console, "Available commands:");
                                 Thread.Sleep(1000);
-                                Say($"- !difficulty");
+                                Say(console, "- !difficulty");
                                 Thread.Sleep(1000);
-                                Say($"- !restart");
+                                Say(console, "- !restart");
                                 Thread.Sleep(1000);
-                                Say($"- !tp");
+                                Say(console, "- !tp");
                                 break;
                         }
                     }
                     catch (Exception err)
                     {
-                        Say($"Serious error occured, let Connor know || Stack: {err.Message}", console);
+                        Say(console, $"Serious error occured, let Connor know || Stack: {err.Message}");
                     }
 
                 }
@@ -115,6 +73,8 @@ public class Run
 
 
         //Prevent closing
-        Console.Read();
+        string result = Console.ReadLine() ?? String.Empty;
+        Command(console, result);
+        console.BeginOutputReadLine();
     }
 }
