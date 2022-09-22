@@ -40,8 +40,7 @@ public class Run
                                 Commands.Difficulty(console, result);
                                 break;
                             case "!restart":
-                                restart = true;
-                                Say(console, "This will RESTART the server, if you're sure type !confirm");
+                            restart = Commands.Restart(console);
                                 break;
                             case "!confirm":
                                 if (Commands.Confirm(restart, console))
@@ -63,13 +62,7 @@ public class Run
                             case "!":
                             case "!?":
                             case "!help":
-                                Say(console, "Available commands:");
-                                Thread.Sleep(1000);
-                                Say(console, "- !difficulty");
-                                Thread.Sleep(1000);
-                                Say(console, "- !restart");
-                                Thread.Sleep(1000);
-                                Say(console, "- !tp");
+                                Commands.Help(console, result);
                                 break;
                         }
                         switch(result[3])

@@ -37,6 +37,12 @@ public class Commands
         }
     }
 
+    public static bool Restart(Process console)
+    {
+        Say(console, "This will RESTART the server, if you're sure type !confirm");
+        return true;
+    }
+
     public static bool Confirm(bool restart, Process console)
     {
         bool resetCalled = false;
@@ -153,6 +159,16 @@ public class Commands
             {
                 Say(console, $"You don't have any homes, try making one with !sethome");
             }
+        }
+    }
+
+    public static void Help(Process console, string[] result)
+    {
+        string player = result[3].Replace(">", "").Replace("<", "");
+        Command(console, $"tell {player} /// Commands ///");
+        foreach (var item in Constants.Commands)
+        {
+            Command(console, $"tell {player} - {item}");
         }
     }
 }
