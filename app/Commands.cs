@@ -1,19 +1,29 @@
 using System.Diagnostics;
-using System.Text.Json;
 using static Helper;
 
 public class Commands
 {
-    public static void Teleport(Process console, string[] result)
+    public static bool Teleport(Process console, string[] result)
     {
         if (result.Length == 6)
         {
             string firstPlayer = result[3].Replace(">", "").Replace("<", "");
             string secondPlayer = result[5];
             Command(console, $"tp {firstPlayer} {secondPlayer}");
-            Say(console, $"Telporting {firstPlayer} to {secondPlayer}");
+            //Say(console, $"Telporting {firstPlayer} to {secondPlayer}");
+            return true;
             //TODO: Add validation to check if player is valid.
         }
+        else
+        {
+            Say(console, "To use: !tp (name) ex: !tp AConnor");
+        }
+        return false;
+    }
+
+    public static void Teleport_Logic(Process console, string[] result)
+    {
+
     }
 
     public static void Difficulty(Process console, string[] result)

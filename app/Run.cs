@@ -10,6 +10,7 @@ public class Run
         bool restart = false;
         string homeName = "";
         bool setHomeWasCalled = false;
+        bool tpWasCalled = false;
 
         console = new Process();
 
@@ -43,7 +44,10 @@ public class Run
                         switch (result[4])
                         {
                             case "!tp":
-                                Commands.Teleport(console, result);
+                                if (Commands.Teleport(console, result))
+                                {
+                                    tpWasCalled = true;
+                                }
                                 break;
                             case "!difficulty":
                                 Commands.Difficulty(console, result);
@@ -84,19 +88,30 @@ public class Run
                                 break;
                         }
                         switch (result[3])
-                        {
-                            //TODO: Add check to make sure this is only activated 
-                            //when coming from overlay and not the console 
+                        { 
                             case "teleported": //When !sethome is called, console executed a teleport, 
                                                //check for this message to grab coords
                                 var cords = result[6].Split(",");
-                                if (cords.Length == 3 && setHomeWasCalled)
+                                if (setHomeWasCalled)
                                 {
                                     string player = result[4];
                                     Commands.SetHomeLogic(console, cords, player, homeName);
                                     homeName = "";
                                     setHomeWasCalled = false;
                                 }
+                                if (tpWasCalled)
+                                {
+                                    Say(console, $"{String.Join(" ", result, 3, result.Count()-3)}");
+                                }
+                                break;
+                                case "that": //when !teleport is called, console will try to teleport
+                                             //we look for the first word of error message, "that"
+                                             //to validate if the command was successful
+                                 if (tpWasCalled && result[4] == "player")
+                                 {
+                                     Say(console, "Error: That player could not be found");
+                                     tpWasCalled = false;
+                                 }
                                 break;
                         }
                     }
