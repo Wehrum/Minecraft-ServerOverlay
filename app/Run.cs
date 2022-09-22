@@ -9,7 +9,9 @@ public class Run
         Console.WriteLine("Running app");
         bool restart = false;
         string homeName = "";
+        string player = "";
         bool setHomeWasCalled = false;
+        bool tpWasCalled = false;
 
         console = new Process();
 
@@ -43,7 +45,11 @@ public class Run
                         switch (result[4])
                         {
                             case "!tp":
-                                Commands.Teleport(console, result);
+                                if (Commands.Teleport(console, result))
+                                {
+                                    tpWasCalled = true;
+                                    player = result[3].Replace(">", "").Replace("<", "");
+                                }
                                 break;
                             case "!difficulty":
                                 Commands.Difficulty(console, result);
@@ -84,19 +90,25 @@ public class Run
                                 break;
                         }
                         switch (result[3])
-                        {
-                            //TODO: Add check to make sure this is only activated 
-                            //when coming from overlay and not the console 
+                        { 
                             case "teleported": //When !sethome is called, console executed a teleport, 
                                                //check for this message to grab coords
                                 var cords = result[6].Split(",");
-                                if (cords.Length == 3 && setHomeWasCalled)
+                                if (setHomeWasCalled)
                                 {
                                     string player = result[4];
                                     Commands.SetHomeLogic(console, cords, player, homeName);
                                     homeName = "";
                                     setHomeWasCalled = false;
                                 }
+                                break;
+                                case "that": //when !teleport is called, console will try to teleport
+                                             //we look for the first word of error message, "that"
+                                             //to validate if the command was successful
+                                 if (tpWasCalled)
+                                 {
+
+                                 }
                                 break;
                         }
                     }
