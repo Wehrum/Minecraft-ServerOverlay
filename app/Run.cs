@@ -59,6 +59,14 @@ public class Run
                             case "!listhomes":
                                 Commands.ListHomes(console, result);
                                 break;
+                            case "!home":
+                                //Home stuff
+                                break;
+                            case "!delhome":
+                            case "!removehome":
+                            case "!deletehome":
+                                //Remove home stuff
+                                break;
                             case "!":
                             case "!?":
                             case "!help":

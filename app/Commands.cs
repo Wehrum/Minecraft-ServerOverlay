@@ -154,13 +154,43 @@ public class Commands
                     homes += $"{item.HomeName}, ";
                 }
                 Command(console, $"tell {player} {homes.TrimEnd().TrimEnd(',')}");
-                break;
-            }
-            else if (i == data.Players.Count - 1)
-            {
-                Say(console, $"You don't have any homes, try making one with !sethome");
+                return;
             }
         }
+        Say(console, $"You don't have any homes, try making one with !sethome");
+
+    }
+
+    public static void DeleteHome(Process console, string[] result)
+    {
+        var data = ReadHomeConfig();
+
+        string player = result[3].Replace(">", "").Replace("<", "");
+
+        for (int i = 0; i < data.Players.Count; i++)
+        {
+            if (data.Players[i].Username == player)
+            {
+                foreach (var item in data.Players[i].UserHomes)
+                {
+                    if (item.HomeName == result[5])
+                    {
+                        Command(console, $"tell {player} deleting home: '{result[5]}'");
+
+                        if (data.Players[i].UserHomes.Count > 1)
+                        {
+                            data.Players[i].UserHomes.Remove(item);
+                        }
+                        else
+                        {
+                            data.Players.Remove(data.Players[i]);
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+        Say(console, $"You don't have any homes, try making one with !sethome");
     }
 
     public static void Help(Process console, string[] result)
