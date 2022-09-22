@@ -12,6 +12,7 @@ public class Commands
             string secondPlayer = result[5];
             Command(console, $"tp {firstPlayer} {secondPlayer}");
             Say(console, $"Telporting {firstPlayer} to {secondPlayer}");
+            //TODO: Add validation to check if player is valid.
         }
     }
 
@@ -25,9 +26,9 @@ public class Commands
                 {
                     Command(console, $"difficulty {result[5]}");
                     Say(console, "Switching difficulty to {result[5]}");
-                    break;
+                    return;
                 }
-                else if (i == Constants.Gamemodes.Length - 1)
+                else
                 {
                     Say(console, $"Switching difficulty to {result[5]}");
                 }
@@ -76,9 +77,7 @@ public class Commands
 
     public static void SetHomeLogic (Process console, string[] coordinates, string userName, string homeName)
     {
-        var jsonData = System.IO.File.ReadAllText($"{AppContext.BaseDirectory}/homeconfig.json");
-        Data data = JsonSerializer.Deserialize<Data>(jsonData);
-
+        var data = ReadHomeConfig();
         for (int i = 0; i < data.Players.Count; i++)
         {
             if (data.Players[i].Username == userName)
@@ -124,9 +123,7 @@ public class Commands
             double.TryParse(coordinates[2], out double z);
             Command(console, $"tell {userName} successfully created home: '{homeName}' at X: {Math.Round(x)} Y: {Math.Round(y)} Z: {Math.Round(z)}");
 
-            File.WriteAllText($"{AppContext.BaseDirectory}homeconfig.json", JsonSerializer.Serialize(data, new JsonSerializerOptions {
-                WriteIndented = true
-            }));
+            WriteHomeConfig(data);
     }
 
     public static void Home(string[] result, Process console)
@@ -136,8 +133,7 @@ public class Commands
 
     public static void ListHomes(Process console, string[] result)
     {
-        var jsonData = System.IO.File.ReadAllText($"{AppContext.BaseDirectory}/homeconfig.json");
-        Data data = JsonSerializer.Deserialize<Data>(jsonData);
+        var data = ReadHomeConfig();
 
          string player = result[3].Replace(">", "").Replace("<", "");
 

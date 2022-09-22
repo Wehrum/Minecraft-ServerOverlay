@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-Helper.FileChecker(); //Runs a check to see if homeconfig.json exists, if not, create and populate it.
+Helper.HomeConfigChecker(); //Runs a check to see if homeconfig.json exists, if not, create and populate it.
 
 var myapp = new Run();
 

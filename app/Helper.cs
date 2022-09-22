@@ -13,10 +13,26 @@ public static class Helper
         process.StandardInput.WriteLine(message);
     }
 
-    public static void FileChecker()
+    public static Data ReadHomeConfig()
+    {
+        var jsonData = System.IO.File.ReadAllText($"{AppContext.BaseDirectory}homeconfig.json");
+        Data data = JsonSerializer.Deserialize<Data>(jsonData) ?? throw new NullReferenceException();
+
+        return data;
+    }
+
+    public static void WriteHomeConfig(Data data)
+    {
+        File.WriteAllText($"{AppContext.BaseDirectory}homeconfig.json", JsonSerializer.Serialize(data, new JsonSerializerOptions {
+             WriteIndented = true
+         }));
+    }
+
+    public static void HomeConfigChecker()
     {
         if (!System.IO.File.Exists($"{AppContext.BaseDirectory}homeconfig.json"))
         {
+            Console.WriteLine("Didn't find homeconfig.json, creating file..");
             var obj = new Data
             {
                 Players = new List<Player>
@@ -33,9 +49,11 @@ public static class Helper
                 }
                 
             };
-            File.WriteAllText($"{AppContext.BaseDirectory}homeconfig.json", JsonSerializer.Serialize(obj, new JsonSerializerOptions {
-             WriteIndented = true
-         }));
+            WriteHomeConfig(obj);
+        }
+        else 
+        {
+            Console.WriteLine("homeconfig.json found!");
         }
     }
 }

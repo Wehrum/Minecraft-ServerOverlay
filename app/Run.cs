@@ -73,7 +73,8 @@ public class Run
                         {
                             //TODO: Add check to make sure this is only activated 
                             //when coming from overlay and not the console 
-                            case "teleported": //When !sethome is called, console executed a teleport, check for this message to grab coords
+                            case "teleported": //When !sethome is called, console executed a teleport, 
+                                                //check for this message to grab coords
                             var cords = result[6].Split(",");
                             if (cords.Length == 3)
                             {
