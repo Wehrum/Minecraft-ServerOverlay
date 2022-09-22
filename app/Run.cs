@@ -4,22 +4,31 @@ using static Helper;
 public class Run
 {
     public Process console;
-
-    //Thread tid2 = new Thread(new ThreadStart(ServerOverlay));
     public void ServerOverlay()
     {
         Console.WriteLine("Running app");
         bool restart = false;
         string homeName = "";
+        bool setHomeWasCalled = false;
 
         console = new Process();
-        console.StartInfo = new ProcessStartInfo()
+
+// console.StartInfo = new ProcessStartInfo("") // <------ Linux
+//         {
+//             FileName = "bash", 
+               //Arguments = "/home/connorwehrum/project/testserver/LaunchServer.sh", 
+//             RedirectStandardOutput = true,
+//             RedirectStandardInput = true,
+//             UseShellExecute = false,
+//             WorkingDirectory = "C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\"
+//         };
+
+        console.StartInfo = new ProcessStartInfo("C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\start.bat") // <---- Windows
         {
-            FileName = "bash",
-            Arguments = "/home/connorwehrum/project/testserver/LaunchServer.sh",
             RedirectStandardOutput = true,
             RedirectStandardInput = true,
             UseShellExecute = false,
+            WorkingDirectory = "C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\"
         };
 
         console.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
@@ -27,7 +36,7 @@ public class Run
             if (e.Data != null)
             {
                 string[] result = e.Data.ToLower().Split(' ');
-                if (result.Length > 4)
+                if (result.Length > 4 && result[3] != "[server]")
                 {
                     try
                     {
@@ -52,6 +61,7 @@ public class Run
                                 if (Commands.SetHome(console, result))
                                 {
                                     homeName = result[5];
+                                    setHomeWasCalled = true;
                                 }
                                 break;
                             case "!homes":
@@ -60,12 +70,12 @@ public class Run
                                 Commands.ListHomes(console, result);
                                 break;
                             case "!home":
-                                //Home stuff
+                                Commands.Home(console, result);
                                 break;
                             case "!delhome":
                             case "!removehome":
                             case "!deletehome":
-                                //Remove home stuff
+                                Commands.DeleteHome(console, result);
                                 break;
                             case "!":
                             case "!?":
@@ -80,11 +90,12 @@ public class Run
                             case "teleported": //When !sethome is called, console executed a teleport, 
                                                //check for this message to grab coords
                                 var cords = result[6].Split(",");
-                                if (cords.Length == 3)
+                                if (cords.Length == 3 && setHomeWasCalled)
                                 {
                                     string player = result[4];
                                     Commands.SetHomeLogic(console, cords, player, homeName);
                                     homeName = "";
+                                    setHomeWasCalled = false;
                                 }
                                 break;
                         }

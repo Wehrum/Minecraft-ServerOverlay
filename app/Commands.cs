@@ -84,6 +84,10 @@ public class Commands
     public static void SetHomeLogic(Process console, string[] coordinates, string userName, string homeName)
     {
         var data = ReadHomeConfig();
+        if (homeName == string.Empty)
+        {
+            Command(console, $"tell {userName} Give your home a name, dingus");
+        }
         for (int i = 0; i < data.Players.Count; i++)
         {
             if (data.Players[i].Username == userName)
@@ -133,35 +137,7 @@ public class Commands
         WriteHomeConfig(data);
     }
 
-    public static void Home(string[] result, Process console)
-    {
-
-    }
-
-    public static void ListHomes(Process console, string[] result)
-    {
-        var data = ReadHomeConfig();
-
-        string player = result[3].Replace(">", "").Replace("<", "");
-
-        for (int i = 0; i < data.Players.Count; i++)
-        {
-            if (data.Players[i].Username == player)
-            {
-                string homes = "Homes: ";
-                foreach (var item in data.Players[i].UserHomes)
-                {
-                    homes += $"{item.HomeName}, ";
-                }
-                Command(console, $"tell {player} {homes.TrimEnd().TrimEnd(',')}");
-                return;
-            }
-        }
-        Say(console, $"You don't have any homes, try making one with !sethome");
-
-    }
-
-    public static void DeleteHome(Process console, string[] result)
+    public static void Home(Process console, string[] result)
     {
         var data = ReadHomeConfig();
 
@@ -175,22 +151,91 @@ public class Commands
                 {
                     if (item.HomeName == result[5])
                     {
-                        Command(console, $"tell {player} deleting home: '{result[5]}'");
+                        Command(console, $"tell {player} Teleporting to home: '{result[5]}'");
+                        Command(console, $"tp {player} {item.Coordinates[0]} {item.Coordinates[1]} {item.Coordinates[2]}");
+                        return;
+                    }
+                }
+                Command(console, $"tell {player} Error: couldn't find home {result[5]}, use !homes to see your homes");
+            }
+        }
+        Say(console, $"You don't have any homes, try making one with !sethome");
+
+    }
+
+    public static void ListHomes(Process console, string[] result)
+    {
+        if (result.Length == 5)
+        {
+            var data = ReadHomeConfig();
+
+            string player = result[3].Replace(">", "").Replace("<", "");
+
+            for (int i = 0; i < data.Players.Count; i++)
+            {
+                if (data.Players[i].Username == player)
+                {
+                    string homes = "Homes: ";
+                    foreach (var item in data.Players[i].UserHomes)
+                    {
+                        homes += $"{item.HomeName}, ";
+                    }
+                    Command(console, $"tell {player} {homes.TrimEnd().TrimEnd(',')}");
+                    return;
+                }
+            }
+            Say(console, $"You don't have any homes, try making one with !sethome");
+        }
+        else
+        {
+            Say(console, $"To use: !homes OR !listhomes ex: !homes");
+        }
+
+
+    }
+
+    public static void DeleteHome(Process console, string[] result)
+    {
+        if (result.Length == 6)
+        {
+            var data = ReadHomeConfig();
+
+         string player = result[3].Replace(">", "").Replace("<", "");
+
+        for (int i = 0; i < data.Players.Count; i++)
+        {
+            if (data.Players[i].Username == player)
+            {
+                foreach (var item in data.Players[i].UserHomes)
+                {
+                    if (item.HomeName == result[5])
+                    {
+                        Command(console, $"tell {player} Deleting home: '{result[5]}'");
 
                         if (data.Players[i].UserHomes.Count > 1)
                         {
                             data.Players[i].UserHomes.Remove(item);
+                            WriteHomeConfig(data);
                         }
                         else
                         {
                             data.Players.Remove(data.Players[i]);
+                            WriteHomeConfig(data);
                         }
                         return;
                     }
                 }
+                Command(console, $"tell {player} Error: couldn't find home: '{result[5]}', use !homes to see your homes");
+                return;
             }
         }
         Say(console, $"You don't have any homes, try making one with !sethome");
+        }
+        else
+        {
+            Say(console, $"To use: !delhome (home) ex: !delhome myplace");
+        }
+        
     }
 
     public static void Help(Process console, string[] result)
