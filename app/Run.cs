@@ -4,7 +4,7 @@ using static Helper;
 public class Run
 {
     public Process console;
-    
+
     //Thread tid2 = new Thread(new ThreadStart(ServerOverlay));
     public void ServerOverlay()
     {
@@ -40,7 +40,7 @@ public class Run
                                 Commands.Difficulty(console, result);
                                 break;
                             case "!restart":
-                            restart = Commands.Restart(console);
+                                restart = Commands.Restart(console);
                                 break;
                             case "!confirm":
                                 if (Commands.Confirm(restart, console))
@@ -48,15 +48,15 @@ public class Run
                                     ServerOverlay();
                                 }
                                 break;
-                                case "!sethome":
-                                if(Commands.SetHome(console, result))
+                            case "!sethome":
+                                if (Commands.SetHome(console, result))
                                 {
                                     homeName = result[5];
                                 }
                                 break;
-                                case "!homes":
-                                case "!listhome":
-                                case "!listhomes":
+                            case "!homes":
+                            case "!listhome":
+                            case "!listhomes":
                                 Commands.ListHomes(console, result);
                                 break;
                             case "!":
@@ -65,20 +65,20 @@ public class Run
                                 Commands.Help(console, result);
                                 break;
                         }
-                        switch(result[3])
+                        switch (result[3])
                         {
                             //TODO: Add check to make sure this is only activated 
                             //when coming from overlay and not the console 
                             case "teleported": //When !sethome is called, console executed a teleport, 
-                                                //check for this message to grab coords
-                            var cords = result[6].Split(",");
-                            if (cords.Length == 3)
-                            {
-                                string player = result[4];
-                                Commands.SetHomeLogic(console, cords, player, homeName);
-                                homeName = "";
-                            }
-                            break;
+                                               //check for this message to grab coords
+                                var cords = result[6].Split(",");
+                                if (cords.Length == 3)
+                                {
+                                    string player = result[4];
+                                    Commands.SetHomeLogic(console, cords, player, homeName);
+                                    homeName = "";
+                                }
+                                break;
                         }
                     }
                     catch (Exception err)
@@ -93,7 +93,7 @@ public class Run
         });
         console.Start();
         console.BeginOutputReadLine();
-        
+
 
         //Prevent closing
         Console.Read();
@@ -101,13 +101,13 @@ public class Run
 
     public void ConsoleReader()
     {
-        try 
+        try
         {
             var result = Console.ReadLine() ?? string.Empty;
-                if(console.HasExited)
-                {
-                    Console.WriteLine("Exiting program due to console exit.");
-                }
+            if (console.HasExited)
+            {
+                Console.WriteLine("Exiting program due to console exit.");
+            }
             Command(console, result);
             ConsoleReader();
         }
@@ -115,6 +115,6 @@ public class Run
         {
             Console.WriteLine(e.Message);
         }
-        
+
     }
 }

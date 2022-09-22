@@ -81,14 +81,14 @@ public class Commands
         }
     }
 
-    public static void SetHomeLogic (Process console, string[] coordinates, string userName, string homeName)
+    public static void SetHomeLogic(Process console, string[] coordinates, string userName, string homeName)
     {
         var data = ReadHomeConfig();
         for (int i = 0; i < data.Players.Count; i++)
         {
             if (data.Players[i].Username == userName)
             {
-                 foreach (var item in data.Players[i].UserHomes)
+                foreach (var item in data.Players[i].UserHomes)
                 {
                     if (item.HomeName == homeName)
                     {
@@ -104,12 +104,13 @@ public class Commands
                     }
                 );
                 break;
-                
+
             }
             else if (i == data.Players.Count - 1)
             {
                 var initialHome = new List<Home>();
-                initialHome.Add(new Home {
+                initialHome.Add(new Home
+                {
                     HomeName = homeName,
                     Coordinates = coordinates
                 });
@@ -124,12 +125,12 @@ public class Commands
                 break;
             }
         }
-            double.TryParse(coordinates[0], out double x);
-            double.TryParse(coordinates[1], out double y);
-            double.TryParse(coordinates[2], out double z);
-            Command(console, $"tell {userName} successfully created home: '{homeName}' at X: {Math.Round(x)} Y: {Math.Round(y)} Z: {Math.Round(z)}");
+        double.TryParse(coordinates[0], out double x);
+        double.TryParse(coordinates[1], out double y);
+        double.TryParse(coordinates[2], out double z);
+        Command(console, $"tell {userName} successfully created home: '{homeName}' at X: {Math.Round(x)} Y: {Math.Round(y)} Z: {Math.Round(z)}");
 
-            WriteHomeConfig(data);
+        WriteHomeConfig(data);
     }
 
     public static void Home(string[] result, Process console)
@@ -141,7 +142,7 @@ public class Commands
     {
         var data = ReadHomeConfig();
 
-         string player = result[3].Replace(">", "").Replace("<", "");
+        string player = result[3].Replace(">", "").Replace("<", "");
 
         for (int i = 0; i < data.Players.Count; i++)
         {
