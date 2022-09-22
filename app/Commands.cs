@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Text.Json;
 using static Helper;
 
 public class Commands
@@ -15,12 +14,16 @@ public class Commands
             return true;
             //TODO: Add validation to check if player is valid.
         }
+        else
+        {
+            Say(console, "To use: !tp (name) ex: !tp AConnor");
+        }
         return false;
     }
 
     public static void Teleport_Logic(Process console, string[] result)
     {
-        
+
     }
 
     public static void Difficulty(Process console, string[] result)

@@ -9,7 +9,6 @@ public class Run
         Console.WriteLine("Running app");
         bool restart = false;
         string homeName = "";
-        string player = "";
         bool setHomeWasCalled = false;
         bool tpWasCalled = false;
 
@@ -48,7 +47,6 @@ public class Run
                                 if (Commands.Teleport(console, result))
                                 {
                                     tpWasCalled = true;
-                                    player = result[3].Replace(">", "").Replace("<", "");
                                 }
                                 break;
                             case "!difficulty":
@@ -101,13 +99,18 @@ public class Run
                                     homeName = "";
                                     setHomeWasCalled = false;
                                 }
+                                if (tpWasCalled)
+                                {
+                                    Say(console, $"{String.Join(" ", result, 3, result.Count()-3)}");
+                                }
                                 break;
                                 case "that": //when !teleport is called, console will try to teleport
                                              //we look for the first word of error message, "that"
                                              //to validate if the command was successful
-                                 if (tpWasCalled)
+                                 if (tpWasCalled && result[4] == "player")
                                  {
-
+                                     Say(console, "Error: That player could not be found");
+                                     tpWasCalled = false;
                                  }
                                 break;
                         }
