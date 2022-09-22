@@ -102,6 +102,7 @@ public class Run
                                 if (tpWasCalled)
                                 {
                                     Say(console, $"{String.Join(" ", result, 3, result.Count()-3)}");
+                                    tpWasCalled = false;
                                 }
                                 break;
                                 case "that": //when !teleport is called, console will try to teleport
