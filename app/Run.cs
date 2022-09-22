@@ -52,6 +52,7 @@ public class Run
                                     homeName = result[5];
                                 }
                                 break;
+                                case "!homes":
                                 case "!listhome":
                                 case "!listhomes":
                                 Commands.ListHomes(console, result);

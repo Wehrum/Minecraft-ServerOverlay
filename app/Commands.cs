@@ -87,21 +87,18 @@ public class Commands
                 {
                     if (item.HomeName == homeName)
                     {
-                        Command(console, $"tell {userName} Error: You already have a home set with that name. To list homes type !listhomes");
-                        break;
-                    }
-                    else 
-                    {
-                        data.Players[i].UserHomes.Add(
-                            new Home
-                            {
-                                HomeName = homeName,
-                                Coordinates = coordinates
-                            }
-                        );
-                        break;
+                        Command(console, $"tell {userName} Error: You already have a home set with that name. To list homes type !homes");
+                        return;
                     }
                 }
+                data.Players[i].UserHomes.Add(
+                    new Home
+                    {
+                        HomeName = homeName,
+                        Coordinates = coordinates
+                    }
+                );
+                break;
                 
             }
             else if (i == data.Players.Count - 1)
@@ -121,15 +118,15 @@ public class Commands
                 );
                 break;
             }
-                double.TryParse(coordinates[0], out double x);
-                double.TryParse(coordinates[1], out double y);
-                double.TryParse(coordinates[2], out double z);
-                Command(console, $"tell {userName} successfully created home: '{homeName}' at X: {Math.Round(x)} Y: {Math.Round(y)} Z: {Math.Round(z)}");
         }
+            double.TryParse(coordinates[0], out double x);
+            double.TryParse(coordinates[1], out double y);
+            double.TryParse(coordinates[2], out double z);
+            Command(console, $"tell {userName} successfully created home: '{homeName}' at X: {Math.Round(x)} Y: {Math.Round(y)} Z: {Math.Round(z)}");
 
-        File.WriteAllText($"{AppContext.BaseDirectory}homeconfig.json", JsonSerializer.Serialize(data, new JsonSerializerOptions {
-             WriteIndented = true
-         }));
+            File.WriteAllText($"{AppContext.BaseDirectory}homeconfig.json", JsonSerializer.Serialize(data, new JsonSerializerOptions {
+                WriteIndented = true
+            }));
     }
 
     public static void Home(string[] result, Process console)
@@ -148,12 +145,12 @@ public class Commands
         {
             if (data.Players[i].Username == player)
             {
-                Command(console, $"tell {player} homes:");
-
+                string homes = "Homes: ";
                 foreach (var item in data.Players[i].UserHomes)
                 {
-                    Command(console, $"tell {player} {item.HomeName}");
+                    homes += $"{item.HomeName}, ";
                 }
+                Command(console, $"tell {player} {homes.TrimEnd().TrimEnd(',')}");
                 break;
             }
             else if (i == data.Players.Count - 1)
