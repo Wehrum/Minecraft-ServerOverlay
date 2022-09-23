@@ -169,10 +169,11 @@ public class Commands
                         }
                     }
                     Command(console, $"tell {player} Error: couldn't find home {result[5]}, use !homes to see your homes");
+                    return;
                 }
             }
             Say(console, $"You don't have any homes, try making one with !sethome");
-
+            return;
         }
         else
         {
