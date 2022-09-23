@@ -14,29 +14,38 @@ public class Run
 
         console = new Process();
 
-// console.StartInfo = new ProcessStartInfo("") // <------ Linux
-//         {
-//             FileName = "bash", 
-               //Arguments = "/home/connorwehrum/project/testserver/LaunchServer.sh", 
-//             RedirectStandardOutput = true,
-//             RedirectStandardInput = true,
-//             UseShellExecute = false,
-//             WorkingDirectory = "C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\"
-//         };
-
-        console.StartInfo = new ProcessStartInfo("C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\start.bat") // <---- Windows
+        console.StartInfo = new ProcessStartInfo("") // <------ Linux
         {
+            FileName = "bash",
+            Arguments = "/home/connorwehrum/project/SevTechAges/SevTechAges/LaunchServer.sh",
             RedirectStandardOutput = true,
             RedirectStandardInput = true,
             UseShellExecute = false,
-            WorkingDirectory = "C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\"
         };
+
+        // console.StartInfo = new ProcessStartInfo("C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\start.bat") // <---- Windows
+        // {
+        //     RedirectStandardOutput = true,
+        //     RedirectStandardInput = true,
+        //     UseShellExecute = false,
+        //     WorkingDirectory = "C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\"
+        // };
 
         console.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
         {
             if (e.Data != null)
             {
                 string[] result = e.Data.ToLower().Split(' ');
+                if (result.Length > 5)
+                {
+                    var foos = new List<string>(result);
+                    foos.RemoveAt(3);
+                    if (result[4] == "teleported" && setHomeWasCalled)
+                    {
+                        foos.RemoveAt(5);
+                    }
+                    result = foos.ToArray();
+                }
                 if (result.Length > 4 && result[3] != "[server]")
                 {
                     try
@@ -88,12 +97,12 @@ public class Run
                                 break;
                         }
                         switch (result[3])
-                        { 
+                        {
                             case "teleported": //When !sethome is called, console executed a teleport, 
                                                //check for this message to grab coords
-                                var cords = result[6].Split(",");
                                 if (setHomeWasCalled)
                                 {
+                                    string[] cords = { result[5].Replace(",", ""), result[6].Replace(",", ""), result[7].Replace(",", "") };
                                     string player = result[4];
                                     Commands.SetHomeLogic(console, cords, player, homeName);
                                     homeName = "";
@@ -101,18 +110,18 @@ public class Run
                                 }
                                 if (tpWasCalled)
                                 {
-                                    Say(console, $"{String.Join(" ", result, 3, result.Count()-3)}");
+                                    Say(console, $"{String.Join(" ", result, 3, result.Count() - 3)}");
                                     tpWasCalled = false;
                                 }
                                 break;
-                                case "that": //when !teleport is called, console will try to teleport
-                                             //we look for the first word of error message, "that"
-                                             //to validate if the command was successful
-                                 if (tpWasCalled && result[4] == "player")
-                                 {
-                                     Say(console, "Error: That player could not be found");
-                                     tpWasCalled = false;
-                                 }
+                            case "entity": //when !teleport is called, console will try to teleport
+                                         //we look for the first word of error message, "that"
+                                         //to validate if the command was successful
+                                if (tpWasCalled)
+                                {
+                                    Say(console, "Error: That player could not be found");
+                                    tpWasCalled = false;
+                                }
                                 break;
                         }
                     }
