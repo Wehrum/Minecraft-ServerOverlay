@@ -17,7 +17,7 @@ public class Run
         console.StartInfo = new ProcessStartInfo("") // <------ Linux
         {
             FileName = "bash",
-            Arguments = "/home/connorwehrum/project/SevTechAges/SevTechAges/LaunchServer.sh",
+            Arguments = "/home/wehrum/servers/SevTechAges/LaunchServer.sh",
             RedirectStandardOutput = true,
             RedirectStandardInput = true,
             UseShellExecute = false,
@@ -107,8 +107,9 @@ public class Run
                                     Commands.SetHomeLogic(console, cords, player, homeName);
                                     homeName = "";
                                     setHomeWasCalled = false;
+                                    tpWasCalled = false;
                                 }
-                                if (tpWasCalled)
+                                else if (tpWasCalled)
                                 {
                                     Say(console, $"{String.Join(" ", result, 3, result.Count() - 3)}");
                                     tpWasCalled = false;
