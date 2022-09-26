@@ -1,4 +1,4 @@
-using System.Diagnostics;
+using static Helper;
 
 public static class Constants
 {

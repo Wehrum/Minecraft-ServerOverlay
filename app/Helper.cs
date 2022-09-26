@@ -56,4 +56,18 @@ public static class Helper
             Console.WriteLine("homeconfig.json found!");
         }
     }
+    
+    public static string[] WelcomeMessage (string Username)
+    {
+        string[] WelcomeMessage =
+        {
+            @$"{Constants.Color.Yellow}\/\/\/\/\/\/\/\/\/\/",
+            @$"{Constants.Color.Aqua}Welcome {Constants.Color.Green}{Username}, {Constants.Color.Aqua}to",
+            @$"{Constants.Color.Aqua}Connor's {Constants.Color.Aqua}SevTech {Constants.Color.Aqua}Server",
+            @$"{Constants.Color.Aqua}Running {Constants.Color.Aqua}ServerOverlay {Constants.Color.Aqua}0.1",
+            @$"{Constants.Color.Aqua}Type {Constants.Color.Red}!help {Constants.Color.Aqua}for {Constants.Color.Aqua}a {Constants.Color.Aqua}list {Constants.Color.Aqua}of {Constants.Color.Aqua}commands",
+            @$"{Constants.Color.Yellow}/\/\/\/\/\/\/\/\/\/\"
+        };
+        return WelcomeMessage;
+    }
 }

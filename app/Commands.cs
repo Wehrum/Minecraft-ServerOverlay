@@ -42,7 +42,7 @@ public class Commands
 
     public static bool Restart(Process console)
     {
-        Say(console, "This will RESTART the server, if you're sure type !confirm");
+        Say(console, $"{Constants.Color.Red}This will RESTART the server, if you're sure type !confirm");
         return true;
     }
 
@@ -54,7 +54,7 @@ public class Commands
             Console.WriteLine("Restarting the server, please wait.");
             for (int i = 10; i > 0; i--)
             {
-                Say(console, $"Restarting the server in {i}!");
+                Say(console, $"{Constants.Color.Red}Restarting the server in {i}!");
                 Thread.Sleep(1000);
             }
             console.StandardInput.WriteLine($"stop");
@@ -99,7 +99,7 @@ public class Commands
                 {
                     if (item.HomeName == homeName)
                     {
-                        Command(console, $"tell {userName} Error: You already have a home set with that name. To list homes type !homes");
+                        Command(console, $"tell {userName} {Constants.Color.Red}Error: You already have a home set with that name. To list homes type !homes");
                         return;
                     }
                 }
@@ -161,7 +161,7 @@ public class Commands
                             return;
                         }
                     }
-                    Command(console, $"tell {player} Error: couldn't find home {result[5]}, use !homes to see your homes");
+                    Command(console, $"tell {player} {Constants.Color.Red}Error: couldn't find home {result[5]}, use !homes to see your homes");
                     return;
                 }
             }
@@ -236,7 +236,7 @@ public class Commands
                             return;
                         }
                     }
-                    Command(console, $"tell {player} Error: couldn't find home: '{result[5]}', use !homes to see your homes");
+                    Command(console, $"tell {player} {Constants.Color.Red}Error: couldn't find home: '{result[5]}', use !homes to see your homes");
                     return;
                 }
             }
@@ -257,5 +257,16 @@ public class Commands
         {
             Command(console, $"tell {player} - {item}");
         }
+    }
+
+    public static void Welcome(Process console, string[] result)
+    {
+        string player = result[10];
+        string uuid = result[13];
+        foreach (var item in Helper.WelcomeMessage(player))
+        {
+            Command(console, $"tell {player} {item}");
+        }
+        Command(console, $"tell {player} {Constants.Color.Red}Authenticating {Constants.Color.Red}with {Constants.Color.Red}UUID: {Constants.Color.Red}{uuid}");
     }
 }

@@ -17,7 +17,7 @@ public class Run
         console.StartInfo = new ProcessStartInfo("") // <------ Linux
         {
             FileName = "bash",
-            Arguments = "/home/wehrum/servers/SevTechAges/LaunchServer.sh",
+            Arguments = "/home/connorwehrum/project/SevTechAges/SevTechAges/LaunchServer.sh", 
             RedirectStandardOutput = true,
             RedirectStandardInput = true,
             UseShellExecute = false,
@@ -38,6 +38,10 @@ public class Run
                 string[] result = e.Data.ToLower().Split(' ');
                 if (result.Length > 5)
                 {
+                    if (e.Data.Contains("[Actually Additions]: Sending Player Data to"))
+                    {
+                        Commands.Welcome(console, result);
+                    }
                     var foos = new List<string>(result);
                     foos.RemoveAt(3);
                     if (result[4] == "teleported" && setHomeWasCalled)
@@ -120,7 +124,7 @@ public class Run
                                          //to validate if the command was successful
                                 if (tpWasCalled)
                                 {
-                                    Say(console, "Error: That player could not be found");
+                                    Say(console, $"{Constants.Color.Red}Error: That player could not be found");
                                     tpWasCalled = false;
                                 }
                                 break;
@@ -128,7 +132,7 @@ public class Run
                     }
                     catch (Exception err)
                     {
-                        Say(console, $"Serious error occured, let Connor know || Stack: {err.Message}");
+                        Say(console, $"{Constants.Color.Red}Serious error occured, let Connor know || Stack: {err.Message}");
                         Console.WriteLine(err);
                     }
 
