@@ -99,7 +99,7 @@ public class Commands
                 {
                     if (data.Players[i].UserHomes != null) //If the player has homes to check
                     {
-                        foreach (var item in data.Players[i].UserHomes)
+                        foreach (var item in data.Players[i].UserHomes) //If a player has a home with the same name, stop them from adding a new one
                         {
                             if (item.HomeName == homeName)
                             {
@@ -107,8 +107,14 @@ public class Commands
                                 return;
                             }
                         }
+                        data.Players[i].UserHomes.Add( //If there is a list, adds a new home to the list.
+                            new Home{
+                                HomeName = homeName,
+                                Coordinates = coordinates
+                            }
+                        );
                     }
-                    else //If there are no new homes, make a new list and add the players home
+                    else //If there is no list, make a new list and add the players home
                     {
                         data.Players[i].UserHomes = new List<Home>(){
                             new Home {
@@ -118,7 +124,7 @@ public class Commands
                         break;
                     }
                 }
-                else
+                else //If the player is not in the overworld, don't let them set a home.
                 {
                     Command(console, $"tell {player} {Constants.Color.Red}Error: !sethome functionality is only available in the overworld");
                     return;
