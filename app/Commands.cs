@@ -95,9 +95,9 @@ public class Commands
         {
             if (data.Players[i].Username == player)
             {
-                if (data.Players[i].IsInWorld)
+                if (data.Players[i].IsInWorld) //If the player is in the overworld
                 {
-                    if (data.Players[i].UserHomes != null)
+                    if (data.Players[i].UserHomes != null) //If the player has homes to check
                     {
                         foreach (var item in data.Players[i].UserHomes)
                         {
@@ -108,14 +108,13 @@ public class Commands
                             }
                         }
                     }
-                    else
+                    else //If there are no new homes, make a new list and add the players home
                     {
-                        data.Players[i].UserHomes.Add(
-                        new Home
-                        {
-                            HomeName = homeName,
-                            Coordinates = coordinates
-                        });
+                        data.Players[i].UserHomes = new List<Home>(){
+                            new Home {
+                                HomeName = homeName,
+                                Coordinates = coordinates
+                            }};
                         break;
                     }
                 }
@@ -191,6 +190,11 @@ public class Commands
                 {
                     if (data.Players[i].UserHomes != null)
                     {
+                        if (data.Players[i].UserHomes.Count == 0)
+                        {
+                           Say(console, $"You don't have any homes, try making one with !sethome");   
+                           return;
+                        }
                         string homes = "Homes: ";
                         foreach (var item in data.Players[i].UserHomes)
                         {
