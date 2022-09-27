@@ -84,58 +84,52 @@ public class Commands
         }
     }
 
-    public static void SetHomeLogic(Process console, string[] coordinates, string userName, string homeName)
+    public static void SetHomeLogic(Process console, string[] coordinates, string player, string homeName)
     {
         var data = ReadHomeConfig();
         if (homeName == string.Empty)
         {
-            Command(console, $"tell {userName} Give your home a name, dingus");
+            Command(console, $"tell {player} Give your home a name, dingus");
         }
         for (int i = 0; i < data.Players.Count; i++)
         {
-            if (data.Players[i].Username == userName)
+            if (data.Players[i].Username == player)
             {
-                foreach (var item in data.Players[i].UserHomes)
+                if (data.Players[i].IsInWorld)
                 {
-                    if (item.HomeName == homeName)
+                    if (data.Players[i].UserHomes != null)
                     {
-                        Command(console, $"tell {userName} {Constants.Color.Red}Error: You already have a home set with that name. To list homes type !homes");
-                        return;
+                        foreach (var item in data.Players[i].UserHomes)
+                        {
+                            if (item.HomeName == homeName)
+                            {
+                                Command(console, $"tell {player} {Constants.Color.Red}Error: You already have a home set with that name. To list homes type !homes");
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        data.Players[i].UserHomes.Add(
+                        new Home
+                        {
+                            HomeName = homeName,
+                            Coordinates = coordinates
+                        });
+                        break;
                     }
                 }
-                data.Players[i].UserHomes.Add(
-                    new Home
-                    {
-                        HomeName = homeName,
-                        Coordinates = coordinates
-                    }
-                );
-                break;
-
-            }
-            else if (i == data.Players.Count - 1)
-            {
-                var initialHome = new List<Home>();
-                initialHome.Add(new Home
+                else
                 {
-                    HomeName = homeName,
-                    Coordinates = coordinates
-                });
-
-                data.Players.Add(
-                    new Player
-                    {
-                        Username = userName,
-                        UserHomes = initialHome
-                    }
-                );
-                break;
+                    Command(console, $"tell {player} {Constants.Color.Red}Error: !sethome functionality is only available in the overworld");
+                    return;
+                }
             }
         }
         double.TryParse(coordinates[0], out double x);
         double.TryParse(coordinates[1], out double y);
         double.TryParse(coordinates[2], out double z);
-        Command(console, $"tell {userName} successfully created home: '{homeName}' at X: {Math.Round(x)} Y: {Math.Round(y)} Z: {Math.Round(z)}");
+        Command(console, $"tell {player} successfully created home: '{homeName}' at X: {Math.Round(x)} Y: {Math.Round(y)} Z: {Math.Round(z)}");
 
         WriteHomeConfig(data);
     }
@@ -152,18 +146,27 @@ public class Commands
             {
                 if (data.Players[i].Username == player)
                 {
-                    foreach (var item in data.Players[i].UserHomes)
+                    if (data.Players[i].IsInWorld)
                     {
-                        if (item.HomeName == result[5])
+                        foreach (var item in data.Players[i].UserHomes)
                         {
-                            Command(console, $"tell {player} Teleporting to home: '{result[5]}'");
-                            Command(console, $"tp {player} {item.Coordinates[0]} {item.Coordinates[1]} {item.Coordinates[2]}");
-                            return;
+                            if (item.HomeName == result[5])
+                            {
+                                Command(console, $"tell {player} Teleporting to home: '{result[5]}'");
+                                Command(console, $"tp {player} {item.Coordinates[0]} {item.Coordinates[1]} {item.Coordinates[2]}");
+                                return;
+                            }
                         }
+                        Command(console, $"tell {player} {Constants.Color.Red}Error: couldn't find home {result[5]}, use !homes to see your homes");
+                        return;
                     }
-                    Command(console, $"tell {player} {Constants.Color.Red}Error: couldn't find home {result[5]}, use !homes to see your homes");
-                    return;
+                    else
+                    {
+                        Command(console, $"tell {player} {Constants.Color.Red}Error: !home functionality is only available in the overworld");
+                        return;
+                    }
                 }
+
             }
             Say(console, $"You don't have any homes, try making one with !sethome");
             return;
@@ -186,16 +189,23 @@ public class Commands
             {
                 if (data.Players[i].Username == player)
                 {
-                    string homes = "Homes: ";
-                    foreach (var item in data.Players[i].UserHomes)
+                    if (data.Players[i].UserHomes != null)
                     {
-                        homes += $"{item.HomeName}, ";
+                        string homes = "Homes: ";
+                        foreach (var item in data.Players[i].UserHomes)
+                        {
+                            homes += $"{item.HomeName}, ";
+                        }
+                        Command(console, $"tell {player} {homes.TrimEnd().TrimEnd(',')}");
+                        return;
                     }
-                    Command(console, $"tell {player} {homes.TrimEnd().TrimEnd(',')}");
-                    return;
+                    else
+                    {
+                        Say(console, $"You don't have any homes, try making one with !sethome");
+                    }
                 }
             }
-            Say(console, $"You don't have any homes, try making one with !sethome");
+
         }
         else
         {
@@ -222,17 +232,9 @@ public class Commands
                         if (item.HomeName == result[5])
                         {
                             Command(console, $"tell {player} Deleting home: '{result[5]}'");
+                            data.Players[i].UserHomes.Remove(item);
+                            WriteHomeConfig(data);
 
-                            if (data.Players[i].UserHomes.Count > 1)
-                            {
-                                data.Players[i].UserHomes.Remove(item);
-                                WriteHomeConfig(data);
-                            }
-                            else
-                            {
-                                data.Players.Remove(data.Players[i]);
-                                WriteHomeConfig(data);
-                            }
                             return;
                         }
                     }
@@ -256,6 +258,55 @@ public class Commands
         foreach (var item in Constants.Commands)
         {
             Command(console, $"tell {player} - {item}");
+        }
+    }
+
+    public static void UpdateDimension(Process console, string[] result)
+    {
+        if (result[5] == "joining" && result[6] == "dimension")
+        {
+            var data = ReadHomeConfig();
+            string player = result[4];
+
+            for (int i = 0; i < data.Players.Count; i++)
+            {
+                if (data.Players[i].Username == player)
+                {
+                    if (result[7] == "0")
+                    {
+                        data.Players[i].IsInWorld = true;
+                        WriteHomeConfig(data);
+                        return;
+                    }
+                    else
+                    {
+                        data.Players[i].IsInWorld = false;
+                        WriteHomeConfig(data);
+                        return;
+                    }
+                }
+            }
+            if (result[7] == "0") //If player is not found, we want to make a new one and keep track of this value
+            {
+                data.Players.Add(
+                    new Player
+                    {
+                        Username = player,
+                        IsInWorld = true
+                    }
+                );
+            }
+            else
+            {
+                data.Players.Add(
+                    new Player
+                    {
+                        Username = player,
+                        IsInWorld = false
+                    }
+                );
+            }
+            WriteHomeConfig(data);
         }
     }
 

@@ -17,7 +17,7 @@ public class Run
         console.StartInfo = new ProcessStartInfo("") // <------ Linux
         {
             FileName = "bash",
-            Arguments = "/home/connorwehrum/project/SevTechAges/SevTechAges/LaunchServer.sh", 
+            Arguments = "/home/connorwehrum/project/SevTechAges/SevTechAges/LaunchServer.sh",
             RedirectStandardOutput = true,
             RedirectStandardInput = true,
             UseShellExecute = false,
@@ -41,6 +41,10 @@ public class Run
                     if (e.Data.Contains("[Actually Additions]: Sending Player Data to"))
                     {
                         Commands.Welcome(console, result);
+                    }
+                    if (result[3] == "[journeymap]:" && result.Length == 8)
+                    {
+                        Commands.UpdateDimension(console, result);
                     }
                     var foos = new List<string>(result);
                     foos.RemoveAt(3);
