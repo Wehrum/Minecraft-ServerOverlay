@@ -17,7 +17,7 @@ public class Run
         console.StartInfo = new ProcessStartInfo("") // <------ Linux
         {
             FileName = "bash",
-            Arguments = "/home/connorwehrum/project/SevTechAges/SevTechAges/LaunchServer.sh",
+            Arguments = "/home/wehrum/servers/SevTechAges/LaunchServer.sh",
             RedirectStandardOutput = true,
             RedirectStandardInput = true,
             UseShellExecute = false,

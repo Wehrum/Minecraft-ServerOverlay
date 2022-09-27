@@ -108,7 +108,8 @@ public class Commands
                             }
                         }
                         data.Players[i].UserHomes.Add( //If there is a list, adds a new home to the list.
-                            new Home{
+                            new Home
+                            {
                                 HomeName = homeName,
                                 Coordinates = coordinates
                             }
@@ -153,17 +154,25 @@ public class Commands
                 {
                     if (data.Players[i].IsInWorld)
                     {
-                        foreach (var item in data.Players[i].UserHomes)
+                        if (data.Players[i].UserHomes != null)
                         {
-                            if (item.HomeName == result[5])
+                            foreach (var item in data.Players[i].UserHomes)
                             {
-                                Command(console, $"tell {player} Teleporting to home: '{result[5]}'");
-                                Command(console, $"tp {player} {item.Coordinates[0]} {item.Coordinates[1]} {item.Coordinates[2]}");
-                                return;
+                                if (item.HomeName == result[5])
+                                {
+                                    Command(console, $"tell {player} Teleporting to home: '{result[5]}'");
+                                    Command(console, $"tp {player} {item.Coordinates[0]} {item.Coordinates[1]} {item.Coordinates[2]}");
+                                    return;
+                                }
                             }
+                            Command(console, $"tell {player} {Constants.Color.Red}Error: couldn't find home {result[5]}, use !homes to see your homes");
+                            return;
                         }
-                        Command(console, $"tell {player} {Constants.Color.Red}Error: couldn't find home {result[5]}, use !homes to see your homes");
-                        return;
+                        else
+                        {
+                            Say(console, $"You don't have any homes, try making one with !sethome");
+                            return;
+                        }
                     }
                     else
                     {
@@ -198,8 +207,8 @@ public class Commands
                     {
                         if (data.Players[i].UserHomes.Count == 0)
                         {
-                           Say(console, $"You don't have any homes, try making one with !sethome");   
-                           return;
+                            Say(console, $"You don't have any homes, try making one with !sethome");
+                            return;
                         }
                         string homes = "Homes: ";
                         foreach (var item in data.Players[i].UserHomes)
