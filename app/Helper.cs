@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Text.Json;
+using static Constants;
 
 public static class Helper
 {
@@ -61,13 +62,24 @@ public static class Helper
     {
         string[] WelcomeMessage =
         {
-            @$"{Constants.Color.Yellow}\/\/\/\/\/\/\/\/\/\/",
-            @$"{Constants.Color.Aqua}Welcome {Constants.Color.Green}{Username}, {Constants.Color.Aqua}to",
-            @$"{Constants.Color.Aqua}Connor's {Constants.Color.Aqua}SevTech {Constants.Color.Aqua}Server",
-            @$"{Constants.Color.Aqua}Running {Constants.Color.Aqua}ServerOverlay {Constants.Color.Aqua}0.1",
-            @$"{Constants.Color.Aqua}Type {Constants.Color.Red}!help {Constants.Color.Aqua}for {Constants.Color.Aqua}a {Constants.Color.Aqua}list {Constants.Color.Aqua}of {Constants.Color.Aqua}commands",
-            @$"{Constants.Color.Yellow}/\/\/\/\/\/\/\/\/\/\"
+            @$"{Color.Yellow}\/\/\/\/\/\/\/\/\/\/",
+            @$"{Color.Aqua}Welcome {Color.Green}{Username}, {Color.Aqua}to",
+            @$"{Color.Aqua}Connor's {Color.Aqua}SevTech {Color.Aqua}Server",
+            @$"{Color.Aqua}Running {Color.Aqua}ServerOverlay {Color.Aqua}0.1",
+            @$"{Color.Aqua}Type {Color.Red}!help {ColorSetter("for a list of commands", Color.Aqua)}",
+            @$"{Color.Yellow}/\/\/\/\/\/\/\/\/\/\"
         };
         return WelcomeMessage;
+    }
+
+    public static string ColorSetter(string sentence, string color)
+    {
+        string[] split = sentence.Split(' ');
+        string result = "";
+        foreach (var item in split)
+        {
+            result += $"{item.Insert(0, color)} ";
+        }
+        return result.TrimEnd();
     }
 }

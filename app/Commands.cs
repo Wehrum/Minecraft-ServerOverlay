@@ -42,7 +42,7 @@ public class Commands
 
     public static bool Restart(Process console)
     {
-        Say(console, $"{Constants.Color.Red}This will RESTART the server, if you're sure type !confirm");
+        Say(console, Helper.ColorSetter($"This will RESTART the server, if you're sure type !confirm", Constants.Color.Red));
         return true;
     }
 
