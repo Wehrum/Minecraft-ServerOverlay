@@ -56,4 +56,17 @@ public static class Helper
             Console.WriteLine("homeconfig.json found!");
         }
     }
+
+    public static void SystemMessage(string message)
+    {
+        Console.SetCursorPosition(0, Console.CursorTop - 1);
+        Console.Write(new string(' ', Console.BufferWidth));
+        Console.SetCursorPosition(0, Console.CursorTop - 1);
+        var time = DateTime.Now;
+        Console.Write(time.ToString("[HH:mm:ss] "));
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.Write("[Server-Overlay]: ");
+        Console.ResetColor();
+        Console.Write($"{message} \r\n");
+    }
 }
