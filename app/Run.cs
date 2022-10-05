@@ -6,7 +6,8 @@ public class Run
     public Process console;
     public void ServerOverlay()
     {
-        Console.WriteLine("Running app");
+        SystemMessage("Starting Server-Overlay");
+        Helper.HomeConfigChecker(); //Runs a check to see if homeconfig.json exists, if not, create and populate it.
         bool restart = false;
         string homeName = "";
         bool setHomeWasCalled = false;
@@ -148,7 +149,7 @@ public class Run
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            SystemMessage(e.Message);
         }
 
     }
