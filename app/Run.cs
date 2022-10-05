@@ -14,22 +14,22 @@ public class Run
 
         console = new Process();
 
-        console.StartInfo = new ProcessStartInfo("") // <------ Linux
-        {
-            FileName = "bash",
-            Arguments = "/home/wehrum/servers/SevTechAges/LaunchServer.sh",
-            RedirectStandardOutput = true,
-            RedirectStandardInput = true,
-            UseShellExecute = false,
-        };
-
-        // console.StartInfo = new ProcessStartInfo("C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\start.bat") // <---- Windows
+        // console.StartInfo = new ProcessStartInfo("") // <------ Linux
         // {
+        //     FileName = "bash",
+        //     Arguments = "/home/wehrum/servers/SevTechAges/LaunchServer.sh",
         //     RedirectStandardOutput = true,
         //     RedirectStandardInput = true,
         //     UseShellExecute = false,
-        //     WorkingDirectory = "C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\"
         // };
+
+        console.StartInfo = new ProcessStartInfo("C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\start.bat") // <---- Windows
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardInput = true,
+            UseShellExecute = false,
+            WorkingDirectory = "C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\"
+        };
 
         console.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
         {
@@ -124,8 +124,8 @@ public class Run
                                 }
                                 break;
                             case "entity": //when !teleport is called, console will try to teleport
-                                         //we look for the first word of error message, "that"
-                                         //to validate if the command was successful
+                                           //we look for the first word of error message, "that"
+                                           //to validate if the command was successful
                                 if (tpWasCalled)
                                 {
                                     Say(console, $"{Constants.Color.Red}Error: That player could not be found");
@@ -157,12 +157,33 @@ public class Run
         try
         {
             var result = Console.ReadLine() ?? string.Empty;
-            if (console.HasExited)
+                        if (console.HasExited)
             {
-                Console.WriteLine("Exiting program due to console exit.");
+                Console.WriteLine("ServerOverlay: Server has stopped!");
+                Thread.Sleep(500);
+                Console.WriteLine("ServerOverlay: Exiting program due to console exit.");
+                Thread.Sleep(500);
+                Environment.Exit(0);
             }
-            Command(console, result);
-            ConsoleReader();
+            if (result.StartsWith("@"))
+            {
+                switch (result)
+                {
+                    case "@c":
+                    case "@clear":
+                        Console.Clear();
+                        break;
+                    default:
+                        Console.WriteLine("ServerOverlay: Unknown command");
+                        break;
+                }
+                ConsoleReader();
+            }
+            else
+            {
+                Command(console, result);
+                ConsoleReader();
+            }
         }
         catch (Exception e)
         {
