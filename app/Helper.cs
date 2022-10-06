@@ -122,12 +122,12 @@ public static class Helper
             SystemMessage("Point me to your start.bat file for the server", ConsoleColor.Green);
             SystemMessage("EX: C:\\Users\\bob\\Downloads\\server\\start.bat", ConsoleColor.Green);
             Console.Write("Path to file: ");
-            var result = Console.ReadLine();
+            var result = Console.ReadLine() ?? "";
             while (!System.IO.File.Exists(result))
             {
                 SystemMessage($"I can't find {result}, double check the path!", ConsoleColor.Red);
                 Console.Write("Path to file: ");
-                result = Console.ReadLine();
+                result = Console.ReadLine() ?? "";
             }
             if (!result.EndsWith(".bat"))
             {
@@ -138,7 +138,7 @@ public static class Helper
                 while (!result.EndsWith(".bat"))
                 {
                    Console.Write("Path to file: ");
-                   result = Console.ReadLine();
+                   result = Console.ReadLine() ?? "";
                 }
             }
             SystemMessage("", ConsoleColor.Yellow);
