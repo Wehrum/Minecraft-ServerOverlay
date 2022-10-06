@@ -6,7 +6,8 @@ public class Run
     public Process console;
     public void ServerOverlay()
     {
-        Console.WriteLine("Running app");
+        SystemMessage("Starting Server-Overlay");
+        Helper.HomeConfigChecker(); //Runs a check to see if homeconfig.json exists, if not, create and populate it.
         bool restart = false;
         string homeName = "";
         bool setHomeWasCalled = false;
@@ -102,6 +103,7 @@ public class Run
                                 if (tpWasCalled)
                                 {
                                     Say(console, $"{String.Join(" ", result, 3, result.Count()-3)}");
+                                    tpWasCalled = false;
                                 }
                                 break;
                                 case "that": //when !teleport is called, console will try to teleport
@@ -117,7 +119,7 @@ public class Run
                     }
                     catch (Exception err)
                     {
-                        Say(console, $"Serious error occured, let Connor know || Stack: {err.Message}");
+                        SystemMessage(console, $"Serious error occured, let Connor know: {err}");
                         Console.WriteLine(err);
                     }
 
@@ -140,14 +142,15 @@ public class Run
             var result = Console.ReadLine() ?? string.Empty;
             if (console.HasExited)
             {
-                Console.WriteLine("Exiting program due to console exit.");
+                SystemMessage("Exiting program due to console exit.");
+                Environment.Exit(0);
             }
             Command(console, result);
             ConsoleReader();
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            SystemMessage(e.Message);
         }
 
     }

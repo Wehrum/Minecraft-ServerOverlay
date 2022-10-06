@@ -3,7 +3,7 @@ using System.Text.Json;
 
 public static class Helper
 {
-     public static void Say(Process process, string message)
+    public static void Say(Process process, string message)
     {
         process.StandardInput.WriteLine($"say {message}");
     }
@@ -23,16 +23,17 @@ public static class Helper
 
     public static void WriteHomeConfig(Data data)
     {
-        File.WriteAllText($"{AppContext.BaseDirectory}homeconfig.json", JsonSerializer.Serialize(data, new JsonSerializerOptions {
-             WriteIndented = true
-         }));
+        File.WriteAllText($"{AppContext.BaseDirectory}homeconfig.json", JsonSerializer.Serialize(data, new JsonSerializerOptions
+        {
+            WriteIndented = true
+        }));
     }
 
     public static void HomeConfigChecker()
     {
         if (!System.IO.File.Exists($"{AppContext.BaseDirectory}homeconfig.json"))
         {
-            Console.WriteLine("Didn't find homeconfig.json, creating file..");
+            SystemMessage("Didn't find homeconfig.json, creating file..");
             var obj = new Data
             {
                 Players = new List<Player>
@@ -47,13 +48,39 @@ public static class Helper
                         }
                     }
                 }
-                
+
             };
             WriteHomeConfig(obj);
         }
-        else 
+        else
         {
-            Console.WriteLine("homeconfig.json found!");
+            SystemMessage("homeconfig.json found!");
         }
+    }
+
+    public static void SystemMessage(Process console, string message)
+    {
+        if(!console.HasExited)
+        {
+            Console.SetCursorPosition(0, Console.CursorTop - 1); // Unavoidable issue that makes a new line when switching from
+            Console.Write(new string(' ', Console.BufferWidth)); // output to console writeline. this removes that line for better
+            Console.SetCursorPosition(0, Console.CursorTop - 1); // readability. This makes it more flush with Minecraft console.   
+        }
+        var time = DateTime.Now;
+        Console.Write(time.ToString("[HH:mm:ss] "));
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.Write("[Server-Overlay]: ");
+        Console.ResetColor();
+        Console.Write($"{message} \r\n");
+    }
+
+    public static void SystemMessage(string message)
+    {
+        var time = DateTime.Now;
+        Console.Write(time.ToString("[HH:mm:ss] "));
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.Write("[Server-Overlay]: ");
+        Console.ResetColor();
+        Console.Write($"{message} \r\n");
     }
 }
