@@ -6,7 +6,7 @@ public class Run
     public Process console;
     public void ServerOverlay()
     {
-        SystemMessage("Starting Server-Overlay");
+        SystemMessage("Starting ServerOverlay");
         Helper.HomeConfigChecker(); //Runs a check to see if homeconfig.json exists, if not, create and populate it.
         bool restart = false;
         string homeName = "";
@@ -21,16 +21,16 @@ public class Run
                //Arguments = "/home/connorwehrum/project/testserver/LaunchServer.sh", 
 //             RedirectStandardOutput = true,
 //             RedirectStandardInput = true,
-//             UseShellExecute = false,
-//             WorkingDirectory = "C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\"
+//             UseShellExecute = false
 //         };
 
-        console.StartInfo = new ProcessStartInfo("C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\start.bat") // <---- Windows
+        console.StartInfo = new ProcessStartInfo() // <---- Windows
         {
             RedirectStandardOutput = true,
             RedirectStandardInput = true,
             UseShellExecute = false,
-            WorkingDirectory = "C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\"
+            WorkingDirectory = "C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\",
+            FileName = "C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\start.bat"
         };
 
         console.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
