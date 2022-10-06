@@ -6,13 +6,14 @@ SystemMessage("Initializing..", ConsoleColor.Yellow);
 
 if(!ConfigCheck("serveroverlay.json"))
 {
-    SystemMessage("Performing first time setup.", ConsoleColor.Yellow);
+    Helper.FirstTimeSetup();
 }
 Console.ReadKey();
-var myapp = new Run();
 
-Thread Th1 = new Thread(new ThreadStart(myapp.ServerOverlay));
-Thread Th2 = new Thread(new ThreadStart(myapp.ConsoleReader));
+// var myapp = new Run();
 
-Th1.Start();
-Th2.Start();
+// Thread Th1 = new Thread(new ThreadStart(myapp.ServerOverlay));
+// Thread Th2 = new Thread(new ThreadStart(myapp.ConsoleReader));
+
+// Th1.Start();
+// Th2.Start();

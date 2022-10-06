@@ -34,11 +34,11 @@ public static class Helper
     {
         if (!System.IO.File.Exists($"{AppContext.BaseDirectory}data/{config}"))
         {
-            SystemMessage($"Can't find {config}!");
-            SystemMessage($"Generating {config}");
             switch (config.ToLower())
             {
                 case "homeconfig.json":
+                    SystemMessage($"Can't find {config}!", ConsoleColor.Red);
+                    SystemMessage($"Generating {config}", ConsoleColor.Yellow);
                     var obj = new Data
                     {
                         Players = new List<Player>
@@ -81,7 +81,7 @@ public static class Helper
         }
         var time = DateTime.Now;
         Console.Write(time.ToString("[HH:mm:ss] "));
-        Console.ForegroundColor = ConsoleColor.Red;
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.Write("[Server-Overlay]: ");
         Console.ResetColor();
         Console.Write($"{message} \r\n");
@@ -105,5 +105,49 @@ public static class Helper
         Console.Write("[Server-Overlay]: ");
         Console.ResetColor();
         Console.Write($"{message} \r\n");
+    }
+
+    public static void FirstTimeSetup()
+    {
+        SystemMessage("Performing first time setup.", ConsoleColor.Yellow);
+        SystemMessage("Welcome to ServerOverlay! A custom console overlay for your Minecraft server.", ConsoleColor.Yellow);
+        SystemMessage($"After setup, locate your config file at: {AppContext.BaseDirectory}data\\serveroverlay.json", ConsoleColor.Yellow);
+        SystemMessage("Consult the documentation at my GitHub for further information: https://github.com/Wehrum/Minecraft-ServerOverlay", ConsoleColor.Yellow);
+        SystemMessage("Would you like to generate and edit serveroverlay.json manually? (Not recommeneded unless you know what you're doing)", ConsoleColor.Green);
+        Console.Write("[Y/N]: ");
+        ConsoleKeyInfo info = Console.ReadKey(false);
+        if (info.Key == ConsoleKey.N)
+        {
+            Console.Clear();
+            SystemMessage("Point me to your start.bat file for the server", ConsoleColor.Green);
+            SystemMessage("EX: C:\\Users\\bob\\Downloads\\server\\start.bat", ConsoleColor.Green);
+            Console.Write("Path to file: ");
+            var result = Console.ReadLine();
+            while (!System.IO.File.Exists(result))
+            {
+                SystemMessage($"I can't find {result}, double check the path!", ConsoleColor.Red);
+                Console.Write("Path to file: ");
+                result = Console.ReadLine();
+            }
+            if (!result.EndsWith(".bat"))
+            {
+                SystemMessage($"The file should end in .bat this is usually found in your Minecraft server folder", ConsoleColor.Red);
+                SystemMessage($"Please doublecheck you're pointing to the right file", ConsoleColor.Red);
+                SystemMessage($"If you're still confused, please consult the GitHub documenation at:", ConsoleColor.Red);
+                SystemMessage($"https://github.com/Wehrum/Minecraft-ServerOverlay", ConsoleColor.Red);
+                while (!result.EndsWith(".bat"))
+                {
+                   Console.Write("Path to file: ");
+                   result = Console.ReadLine();
+                }
+            }
+            SystemMessage("", ConsoleColor.Yellow);
+            SystemMessage("", ConsoleColor.Yellow);
+            SystemMessage("", ConsoleColor.Yellow);
+        }
+        else
+        {
+            //Generate file code
+        }
     }
 }

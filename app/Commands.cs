@@ -21,11 +21,6 @@ public class Commands
         return false;
     }
 
-    public static void Teleport_Logic(Process console, string[] result)
-    {
-
-    }
-
     public static void Difficulty(Process console, string[] result)
     {
         if (result.Length == 6)
