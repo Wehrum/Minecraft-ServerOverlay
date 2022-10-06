@@ -144,7 +144,7 @@ public class Commands
         double.TryParse(coordinates[2], out double z);
         Command(console, $"tell {userName} successfully created home: '{homeName}' at X: {Math.Round(x)} Y: {Math.Round(y)} Z: {Math.Round(z)}");
 
-        WriteHomeConfig(data);
+        WriteConfig(data, "homeconfig.json");
     }
 
     public static void Home(Process console, string[] result)
@@ -225,12 +225,12 @@ public class Commands
                         if (data.Players[i].UserHomes.Count > 1)
                         {
                             data.Players[i].UserHomes.Remove(item);
-                            WriteHomeConfig(data);
+                            WriteConfig(data, "homeconfig.json");
                         }
                         else
                         {
                             data.Players.Remove(data.Players[i]);
-                            WriteHomeConfig(data);
+                            WriteConfig(data, "homeconfig.json");
                         }
                         return;
                     }

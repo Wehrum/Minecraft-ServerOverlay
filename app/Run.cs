@@ -6,8 +6,9 @@ public class Run
     public Process console;
     public void ServerOverlay()
     {
-        SystemMessage("Starting ServerOverlay");
-        Helper.HomeConfigChecker(); //Runs a check to see if homeconfig.json exists, if not, create and populate it.
+        SystemMessage("Starting Server-Overlay", ConsoleColor.Green);
+        Helper.ConfigCheck("homeconfig.json"); //Runs a check to see if homeconfig.json exists, if not, create and populate it.
+
         bool restart = false;
         string homeName = "";
         bool setHomeWasCalled = false;
@@ -29,7 +30,6 @@ public class Run
             RedirectStandardOutput = true,
             RedirectStandardInput = true,
             UseShellExecute = false,
-            WorkingDirectory = "C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\",
             FileName = "C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\start.bat"
         };
 

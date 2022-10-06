@@ -1,8 +1,14 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using static Helper;
 
-Console.Title = "ServerOverlay 0.1";
+Console.Title = "Server-Overlay 0.1";
 
+SystemMessage("Initializing..", ConsoleColor.Yellow);
+
+if(!ConfigCheck("serveroverlay.json"))
+{
+    SystemMessage("Performing first time setup.", ConsoleColor.Yellow);
+}
+Console.ReadKey();
 var myapp = new Run();
 
 Thread Th1 = new Thread(new ThreadStart(myapp.ServerOverlay));

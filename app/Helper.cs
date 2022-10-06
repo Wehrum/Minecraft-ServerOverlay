@@ -21,46 +21,59 @@ public static class Helper
         return data;
     }
 
-    public static void WriteHomeConfig(Data data)
+    public static void WriteConfig(Data data, string config)
     {
-        File.WriteAllText($"{AppContext.BaseDirectory}homeconfig.json", JsonSerializer.Serialize(data, new JsonSerializerOptions
+        File.WriteAllText($"{AppContext.BaseDirectory}data/{config}",
+        JsonSerializer.Serialize(data, new JsonSerializerOptions
         {
             WriteIndented = true
         }));
     }
 
-    public static void HomeConfigChecker()
+    public static bool ConfigCheck(string config)
     {
-        if (!System.IO.File.Exists($"{AppContext.BaseDirectory}homeconfig.json"))
+        if (!System.IO.File.Exists($"{AppContext.BaseDirectory}data/{config}"))
         {
-            SystemMessage("Didn't find homeconfig.json, creating file..");
-            var obj = new Data
+            SystemMessage($"Can't find {config}!");
+            SystemMessage($"Generating {config}");
+            switch (config.ToLower())
             {
-                Players = new List<Player>
-                {
-                    new Player
+                case "homeconfig.json":
+                    var obj = new Data
                     {
-                        UserHomes = new List<Home>
+                        Players = new List<Player>
                         {
-                            new Home{
-                                Coordinates = new string[] {""}
+                            new Player
+                            {
+                                UserHomes = new List<Home>
+                                {
+                                    new Home{
+                                        Coordinates = new string[] {""}
+                                    }
+                                }
                             }
                         }
-                    }
-                }
-
-            };
-            WriteHomeConfig(obj);
+                    };
+                    WriteConfig(obj, "homeconfig.json");
+                    break;
+                case "serveroverlay.json":
+                    return false;
+                default:
+                    SystemMessage("Error: Config checker failed, please report this!");
+                    return false;
+            }
         }
         else
         {
-            SystemMessage("homeconfig.json found!");
+            SystemMessage($"{config} found!");
+            return true;
         }
+        return true;
     }
 
     public static void SystemMessage(Process console, string message)
     {
-        if(!console.HasExited)
+        if (!console.HasExited)
         {
             Console.SetCursorPosition(0, Console.CursorTop - 1); // Unavoidable issue that makes a new line when switching from
             Console.Write(new string(' ', Console.BufferWidth)); // output to console writeline. this removes that line for better
@@ -79,6 +92,16 @@ public static class Helper
         var time = DateTime.Now;
         Console.Write(time.ToString("[HH:mm:ss] "));
         Console.ForegroundColor = ConsoleColor.Red;
+        Console.Write("[Server-Overlay]: ");
+        Console.ResetColor();
+        Console.Write($"{message} \r\n");
+    }
+
+    public static void SystemMessage(string message, ConsoleColor color)
+    {
+        var time = DateTime.Now;
+        Console.Write(time.ToString("[HH:mm:ss] "));
+        Console.ForegroundColor = color;
         Console.Write("[Server-Overlay]: ");
         Console.ResetColor();
         Console.Write($"{message} \r\n");
