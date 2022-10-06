@@ -119,7 +119,7 @@ public class Run
                     }
                     catch (Exception err)
                     {
-                        Say(console, $"Serious error occured, let Connor know || Stack: {err.Message}");
+                        SystemMessage(console, $"Serious error occured, let Connor know: {err}");
                         Console.WriteLine(err);
                     }
 
@@ -142,7 +142,8 @@ public class Run
             var result = Console.ReadLine() ?? string.Empty;
             if (console.HasExited)
             {
-                Console.WriteLine("Exiting program due to console exit.");
+                SystemMessage("Exiting program due to console exit.");
+                Environment.Exit(0);
             }
             Command(console, result);
             ConsoleReader();
