@@ -8,7 +8,7 @@ public class Run
     {
         SystemMessage("Starting Server-Overlay", ConsoleColor.Green);
         Helper.ConfigCheck("homeconfig.json"); //Runs a check to see if homeconfig.json exists, if not, create and populate it.
-
+        var serverConfig = Helper.ReadServerConfig();
         bool restart = false;
         string homeName = "";
         bool setHomeWasCalled = false;
@@ -16,21 +16,20 @@ public class Run
 
         console = new Process();
 
-// console.StartInfo = new ProcessStartInfo("") // <------ Linux
-//         {
-//             FileName = "bash", 
-               //Arguments = "/home/connorwehrum/project/testserver/LaunchServer.sh", 
-//             RedirectStandardOutput = true,
-//             RedirectStandardInput = true,
-//             UseShellExecute = false
-//         };
-
+        // console.StartInfo = new ProcessStartInfo("") // <------ Linux
+        //         {
+        //             FileName = "bash", 
+        //Arguments = "/home/connorwehrum/project/testserver/LaunchServer.sh", 
+        //             RedirectStandardOutput = true,
+        //             RedirectStandardInput = true,
+        //             UseShellExecute = false
+        //         };
         console.StartInfo = new ProcessStartInfo() // <---- Windows
         {
             RedirectStandardOutput = true,
             RedirectStandardInput = true,
             UseShellExecute = false,
-            FileName = "C:\\Users\\connorwehrum\\Downloads\\minecraft-server\\start.bat"
+            FileName = serverConfig.File
         };
 
         console.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
@@ -89,7 +88,7 @@ public class Run
                                 break;
                         }
                         switch (result[3])
-                        { 
+                        {
                             case "teleported": //When !sethome is called, console executed a teleport, 
                                                //check for this message to grab coords
                                 var cords = result[6].Split(",");
@@ -102,18 +101,18 @@ public class Run
                                 }
                                 if (tpWasCalled)
                                 {
-                                    Say(console, $"{String.Join(" ", result, 3, result.Count()-3)}");
+                                    Say(console, $"{String.Join(" ", result, 3, result.Count() - 3)}");
                                     tpWasCalled = false;
                                 }
                                 break;
-                                case "that": //when !teleport is called, console will try to teleport
-                                             //we look for the first word of error message, "that"
-                                             //to validate if the command was successful
-                                 if (tpWasCalled && result[4] == "player")
-                                 {
-                                     Say(console, "Error: That player could not be found");
-                                     tpWasCalled = false;
-                                 }
+                            case "that": //when !teleport is called, console will try to teleport
+                                         //we look for the first word of error message, "that"
+                                         //to validate if the command was successful
+                                if (tpWasCalled && result[4] == "player")
+                                {
+                                    Say(console, "Error: That player could not be found");
+                                    tpWasCalled = false;
+                                }
                                 break;
                         }
                     }
@@ -127,8 +126,18 @@ public class Run
             }
             Console.WriteLine(e.Data);
         });
-        console.Start();
-        console.BeginOutputReadLine();
+        try
+        {
+            console.Start();
+            console.BeginOutputReadLine();
+        }
+
+        catch (System.InvalidOperationException e)
+        {
+            SystemMessage($"{e.Message}");
+            SystemMessage(@$"Please fill out {AppContext.BaseDirectory}data\serveroverlay.json");
+        }
+
 
 
         //Prevent closing

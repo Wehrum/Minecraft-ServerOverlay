@@ -8,12 +8,11 @@ if(!ConfigCheck("serveroverlay.json"))
 {
     Helper.FirstTimeSetup();
 }
-Console.ReadKey();
 
-// var myapp = new Run();
+var myapp = new Run();
 
-// Thread Th1 = new Thread(new ThreadStart(myapp.ServerOverlay));
-// Thread Th2 = new Thread(new ThreadStart(myapp.ConsoleReader));
+Thread Th1 = new Thread(new ThreadStart(myapp.ServerOverlay));
+Thread Th2 = new Thread(new ThreadStart(myapp.ConsoleReader));
 
-// Th1.Start();
-// Th2.Start();
+Th1.Start();
+Th2.Start();
